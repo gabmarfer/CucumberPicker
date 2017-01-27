@@ -10,9 +10,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeViewController" customModule="CucumberPicker" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CucumberManager" customModule="CucumberPicker" customModuleProvider="target">
             <connections>
-                <outlet property="overlayView" destination="iN0-l3-epB" id="Wil-QK-Uvx"/>
+                <outlet property="overlayView" destination="iN0-l3-epB" id="BVt-Om-vwi"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -27,7 +27,7 @@
                             <rect key="frame" x="157" y="21" width="60" height="60"/>
                             <state key="normal" image="overlay-trigger"/>
                             <connections>
-                                <action selector="takePhoto:" destination="-1" eventType="touchUpInside" id="rzl-ag-UY8"/>
+                                <action selector="takePhoto:" destination="-1" eventType="touchUpInside" id="Yt1-MS-P9N"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yax-vs-Et4" userLabel="galleryButton">
@@ -39,7 +39,7 @@
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <state key="normal" image="overlay-images"/>
                             <connections>
-                                <action selector="pickFromGallery:" destination="-1" eventType="touchUpInside" id="i4q-Ae-i1W"/>
+                                <action selector="pickFromGallery:" destination="-1" eventType="touchUpInside" id="hkR-rn-ywB"/>
                             </connections>
                         </button>
                     </subviews>
@@ -65,7 +65,7 @@
                             <state key="normal" image="overlay-flash-auto"/>
                             <state key="selected" image="overlay-flash-on"/>
                             <connections>
-                                <action selector="turnOnOffFlash:" destination="-1" eventType="touchUpInside" id="HLq-9T-24n"/>
+                                <action selector="turnOnOffFlash:" destination="-1" eventType="touchUpInside" id="e4G-lX-6Yk"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fei-LV-30g" userLabel="closeButton">
@@ -76,7 +76,7 @@
                             </constraints>
                             <state key="normal" image="overlay-close-white"/>
                             <connections>
-                                <action selector="closeImagePicker:" destination="-1" eventType="touchUpInside" id="Xpq-Lv-0rb"/>
+                                <action selector="closeImagePicker:" destination="-1" eventType="touchUpInside" id="JI9-cq-rwt"/>
                             </connections>
                         </button>
                     </subviews>
@@ -102,7 +102,7 @@
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
-            <point key="canvasLocation" x="-238.5" y="-1.5"/>
+            <point key="canvasLocation" x="-381" y="-51"/>
         </view>
     </objects>
     <resources>

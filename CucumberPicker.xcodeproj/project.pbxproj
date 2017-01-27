@@ -7,18 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		566670F41E38FD8700BE60FE /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 566670F21E38FD8700BE60FE /* OverlayView.xib */; };
 		5691385B1E378F6A00EA4CC2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5691385A1E378F6A00EA4CC2 /* AppDelegate.swift */; };
 		569138601E378F6A00EA4CC2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5691385E1E378F6A00EA4CC2 /* Main.storyboard */; };
 		569138621E378F6A00EA4CC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 569138611E378F6A00EA4CC2 /* Assets.xcassets */; };
 		569138651E378F6A00EA4CC2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 569138631E378F6A00EA4CC2 /* LaunchScreen.storyboard */; };
 		569138711E379E7800EA4CC2 /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569138701E379E7800EA4CC2 /* HomeCell.swift */; };
 		569138731E379EB800EA4CC2 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569138721E379EB800EA4CC2 /* HomeViewController.swift */; };
-		56A1D0261E3A0F8800334828 /* CucumberManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A1D0251E3A0F8800334828 /* CucumberManager.swift */; };
+		56F894BF1E3B3E95007234A5 /* CucumberManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894BB1E3B3E95007234A5 /* CucumberManager.swift */; };
+		56F894C01E3B3E95007234A5 /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56F894BE1E3B3E95007234A5 /* OverlayView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		566670F31E38FD8700BE60FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OverlayView.xib; sourceTree = "<group>"; };
 		569138571E378F6A00EA4CC2 /* CucumberPicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CucumberPicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5691385A1E378F6A00EA4CC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5691385F1E378F6A00EA4CC2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -27,7 +26,8 @@
 		569138661E378F6A00EA4CC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		569138701E379E7800EA4CC2 /* HomeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomeCell.swift; path = Classes/Views/HomeCell.swift; sourceTree = "<group>"; };
 		569138721E379EB800EA4CC2 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomeViewController.swift; path = Classes/ViewControllers/HomeViewController.swift; sourceTree = "<group>"; };
-		56A1D0251E3A0F8800334828 /* CucumberManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CucumberManager.swift; path = Classes/Utils/CucumberManager.swift; sourceTree = "<group>"; };
+		56F894BB1E3B3E95007234A5 /* CucumberManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CucumberManager.swift; sourceTree = "<group>"; };
+		56F894BE1E3B3E95007234A5 /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,14 +41,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		566670EF1E38A8EE00BE60FE /* CucumberPicker */ = {
-			isa = PBXGroup;
-			children = (
-				56A1D0251E3A0F8800334828 /* CucumberManager.swift */,
-			);
-			name = CucumberPicker;
-			sourceTree = "<group>";
-		};
 		5691384E1E378F6A00EA4CC2 = {
 			isa = PBXGroup;
 			children = (
@@ -68,13 +60,13 @@
 		569138591E378F6A00EA4CC2 /* CucumberPicker */ = {
 			isa = PBXGroup;
 			children = (
+				56F894B91E3B3E95007234A5 /* CucumberPicker */,
 				5691385A1E378F6A00EA4CC2 /* AppDelegate.swift */,
 				569138611E378F6A00EA4CC2 /* Assets.xcassets */,
 				5691386C1E379E3500EA4CC2 /* Classes */,
 				569138661E378F6A00EA4CC2 /* Info.plist */,
 				569138631E378F6A00EA4CC2 /* LaunchScreen.storyboard */,
 				5691385E1E378F6A00EA4CC2 /* Main.storyboard */,
-				566670F21E38FD8700BE60FE /* OverlayView.xib */,
 			);
 			path = CucumberPicker;
 			sourceTree = "<group>";
@@ -82,7 +74,6 @@
 		5691386C1E379E3500EA4CC2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				566670EF1E38A8EE00BE60FE /* CucumberPicker */,
 				5691386D1E379E3F00EA4CC2 /* Models */,
 				5691386E1E379E4200EA4CC2 /* ViewControllers */,
 				5691386F1E379E4700EA4CC2 /* Views */,
@@ -111,6 +102,39 @@
 				569138701E379E7800EA4CC2 /* HomeCell.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		56F894B91E3B3E95007234A5 /* CucumberPicker */ = {
+			isa = PBXGroup;
+			children = (
+				56F894BA1E3B3E95007234A5 /* Managers */,
+				56F894BC1E3B3E95007234A5 /* ViewControllers */,
+				56F894BD1E3B3E95007234A5 /* Views */,
+			);
+			path = CucumberPicker;
+			sourceTree = "<group>";
+		};
+		56F894BA1E3B3E95007234A5 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				56F894BB1E3B3E95007234A5 /* CucumberManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		56F894BC1E3B3E95007234A5 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		56F894BD1E3B3E95007234A5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				56F894BE1E3B3E95007234A5 /* OverlayView.xib */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -174,9 +198,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				569138651E378F6A00EA4CC2 /* LaunchScreen.storyboard in Resources */,
+				56F894C01E3B3E95007234A5 /* OverlayView.xib in Resources */,
 				569138621E378F6A00EA4CC2 /* Assets.xcassets in Resources */,
 				569138601E378F6A00EA4CC2 /* Main.storyboard in Resources */,
-				566670F41E38FD8700BE60FE /* OverlayView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,7 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				569138711E379E7800EA4CC2 /* HomeCell.swift in Sources */,
-				56A1D0261E3A0F8800334828 /* CucumberManager.swift in Sources */,
+				56F894BF1E3B3E95007234A5 /* CucumberManager.swift in Sources */,
 				5691385B1E378F6A00EA4CC2 /* AppDelegate.swift in Sources */,
 				569138731E379EB800EA4CC2 /* HomeViewController.swift in Sources */,
 			);
@@ -197,14 +221,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		566670F21E38FD8700BE60FE /* OverlayView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				566670F31E38FD8700BE60FE /* Base */,
-			);
-			name = OverlayView.xib;
-			sourceTree = "<group>";
-		};
 		5691385E1E378F6A00EA4CC2 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
