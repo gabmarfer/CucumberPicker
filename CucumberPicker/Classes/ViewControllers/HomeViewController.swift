@@ -11,14 +11,15 @@ import UIKit
 class HomeViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     static let HomeCellIdentifier = "HomeCell"
     
-    var imagePaths = [String]()
+    var imagePaths = [URL]()
     var cucumberManager: CucumberManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.cucumberManager = CucumberManager(self)
+        cucumberManager = CucumberManager(self)
+        cucumberManager.delegate = self
         
     }
 
@@ -39,7 +40,8 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeViewController.HomeCellIdentifier, for: indexPath) as! HomeCell
         
-        let image = UIImage(contentsOfFile: self.imagePaths[indexPath.row])
+        let filePath = imagePaths[indexPath.row].path
+        let image = UIImage(contentsOfFile: filePath)
         cell.imgView.image = image
         
         return cell
@@ -53,7 +55,13 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     // MARK: Actions
     @IBAction func handleTapCameraButton(_ sender: UIBarButtonItem) {
-        self.cucumberManager.showImagePicker(fromButton: sender)
+        cucumberManager.showImagePicker(fromButton: sender)
     }
-    
+}
+
+extension HomeViewController: CucumberDelegate {
+    func cumberManager(_ manager: CucumberManager, didFinishPickingImagesWithURLs urls: [URL]) {
+        imagePaths = urls
+        collectionView?.reloadData()
+    }
 }

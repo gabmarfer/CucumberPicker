@@ -54,7 +54,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="335" height="250"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dVc-qV-pI4">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dVc-qV-pI4">
                                             <rect key="frame" x="0.0" y="0.0" width="335" height="250"/>
                                         </imageView>
                                     </subviews>
@@ -75,7 +75,7 @@
                             <outlet property="delegate" destination="GSN-Vv-IDH" id="etM-Y7-DyO"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Cucamber" id="GPR-Cf-87f">
+                    <navigationItem key="navigationItem" title="Cucumber" id="GPR-Cf-87f">
                         <barButtonItem key="rightBarButtonItem" systemItem="camera" id="P3q-Q4-B25">
                             <connections>
                                 <action selector="handleTapCameraButton:" destination="GSN-Vv-IDH" id="YV5-4X-GES"/>

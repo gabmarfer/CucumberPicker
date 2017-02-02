@@ -10,10 +10,13 @@ import Foundation
 import UIKit
 import AVFoundation
 import MobileCoreServices
+import Photos
 
+protocol CucumberDelegate: class {
+    func cumberManager(_ manager: CucumberManager, didFinishPickingImagesWithURLs urls: [URL])
+}
 
-open class CucumberManager: NSObject, UIImagePickerControllerDelegate,
-UINavigationControllerDelegate {
+open class CucumberManager: NSObject {
     
     @IBOutlet var overlayView: UIView!
 
@@ -23,8 +26,26 @@ UINavigationControllerDelegate {
         case off = "overlay-flash-off"
     }
     
-    var imagePickerController: UIImagePickerController?
-    var viewController: UIViewController!
+    enum CucumberNotification: String {
+        case didFinishPickingAssets
+        
+        var name: Notification.Name {
+            return Notification.Name(rawValue: self.rawValue)
+        }
+    }
+    
+    enum CucumberNotificationObject: String {
+        case selectedAssets
+    }
+    
+    weak var delegate: CucumberDelegate?
+    
+    fileprivate var imageManager = ImageManager()
+    fileprivate var imagePickerController: UIImagePickerController?
+    fileprivate var viewController: UIViewController!
+    
+    fileprivate var selectedAssets = Array<PHAsset>()
+    fileprivate var selectedImageURLs = Array<URL>()
     
     public init(_ viewController: UIViewController) {
         self.viewController = viewController
@@ -44,20 +65,23 @@ UINavigationControllerDelegate {
                                               style: .default,
                                               handler: nil)
             alertController.addAction(okAction)
-            self.viewController.present(alertController, animated: true, completion: nil)
+            viewController.present(alertController, animated: true, completion: nil)
         } else if (authStatus == .notDetermined) {
             // The user has not yet been presented with the option to grant access to the camera hardware.
             // Ask for it.
             AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo,
-                                          completionHandler: { (granted) in
+                                          completionHandler: { [weak self] (granted) in
                                             // If access was denied, we do not set the setup error message since access was just denied.
                                             if (granted) {
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
                                                 // Allowed access to camera, go ahead and present the UIImagePickerController.
-                                                self.showImagePicker(forSourceType: self.availableSourceType(), fromButton: button)
+                                                strongSelf.showImagePicker(forSourceType: strongSelf.availableSourceType(), fromButton: button)
                                             }
             })
         } else {
-            self.showImagePicker(forSourceType: self.availableSourceType(), fromButton: button)
+            showImagePicker(forSourceType: availableSourceType(), fromButton: button)
         }
     }
     
@@ -71,20 +95,22 @@ UINavigationControllerDelegate {
         }
     }
     
-    private func showImagePicker(forSourceType sourceType: UIImagePickerControllerSourceType, fromButton button: UIBarButtonItem) {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.modalPresentationStyle = .currentContext
-        imagePickerController.sourceType = sourceType
-        imagePickerController.mediaTypes = [kUTTypeImage as String]
-        imagePickerController.delegate = self
-        imagePickerController.modalPresentationStyle = (sourceType == .camera) ? .fullScreen : .popover
-        imagePickerController.cameraFlashMode = .auto
-        
-        let presentationController = imagePickerController.popoverPresentationController
-        presentationController?.barButtonItem = button // display popover from the UIBarButtonItem as an anchor
-        presentationController?.permittedArrowDirections = .any
-        
+    fileprivate func showImagePicker(forSourceType sourceType: UIImagePickerControllerSourceType, fromButton button: UIBarButtonItem) {
         if (sourceType == .camera) {
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.modalPresentationStyle = .currentContext
+            imagePickerController.sourceType = sourceType
+            imagePickerController.mediaTypes = [kUTTypeImage as String]
+            imagePickerController.delegate = self
+            imagePickerController.modalPresentationStyle = (sourceType == .camera) ? .fullScreen : .popover
+            
+            let presentationController = imagePickerController.popoverPresentationController
+            presentationController?.barButtonItem = button // display popover from the UIBarButtonItem as an anchor
+            presentationController?.permittedArrowDirections = .any
+            
+            // Set flash to auto mode.
+            imagePickerController.cameraFlashMode = .auto
+
             // The user wants to use the camera interface. Set up our custom overlay view for the camera
             imagePickerController.showsCameraControls = false
             
@@ -92,69 +118,130 @@ UINavigationControllerDelegate {
              Load the overlay view from the OverlayView nib file. Self is the File's Owner for the nib file, so the overlayView outlet is set to the main view in the nib. Pass that view to the image picker controller to use as its overlay view, and set self's reference to the view to nil.
              */
             Bundle.main.loadNibNamed("OverlayView", owner: self, options: nil)
-            self.overlayView.frame = imagePickerController.cameraOverlayView!.frame
-            debugPrint(NSStringFromCGRect(self.overlayView.frame))
-            imagePickerController.cameraOverlayView = self.overlayView
+            overlayView.frame = imagePickerController.cameraOverlayView!.frame
+            debugPrint(NSStringFromCGRect(overlayView.frame))
+            imagePickerController.cameraOverlayView = overlayView
             // adjust the cameraView's position
             imagePickerController.cameraViewTransform = CGAffineTransform(translationX: 0.0, y: 64.0)
-            self.overlayView = nil
+            overlayView = nil
+            
+            self.imagePickerController = imagePickerController
+            
+            viewController.present(self.imagePickerController!, animated: true, completion: nil)
+        } else {
+            showCustomGalleryPicker()
         }
+    }
+    
+    fileprivate func showCustomGalleryPicker() {
+        let storyboard = UIStoryboard.cucumberPickerStoryboard()
+        let viewControllerIdentifier = String(describing: AlbumsViewController.self)
+        let albumsViewController = storyboard.instantiateViewController(withIdentifier: viewControllerIdentifier) as! AlbumsViewController
         
-        self.imagePickerController = imagePickerController
+        // Load cached assets
+        albumsViewController.selectedAssets = imageManager.cachedAssets
         
-        self.viewController.present(self.imagePickerController!, animated: true, completion: nil)
+        // Listen for notifications
+        registerForPickingAssetsNotifications()
+        
+        let albumsNavigationController = UINavigationController(rootViewController: albumsViewController)
+        self.viewController.present(albumsNavigationController, animated: true, completion: nil)
     }
     
     // MARK: --- OverlayView actions
     @IBAction func takePhoto(_ sender: Any) {
-        self.imagePickerController?.takePicture()
+        imagePickerController?.takePicture()
     }
     
     @IBAction func pickFromGallery(_ sender: Any) {
-        // TODO: Open custom gallery
+        viewController.dismiss(animated: true) { [weak self] in
+            self?.imagePickerController?.delegate = nil;
+        }
+        showCustomGalleryPicker()
     }
     
     @IBAction func closeImagePicker(_ sender: Any) {
-        self.viewController.dismiss(animated: true) {
+        viewController.dismiss(animated: true) {
             [weak self] in
-            self?.imagePickerController?.delegate = nil;
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.imagePickerController?.delegate = nil;
         }
     }
     
     @IBAction func turnOnOffFlash(_ sender: Any) {
-        let flashMode = self.imagePickerController!.cameraFlashMode as UIImagePickerControllerCameraFlashMode
+        let flashMode = imagePickerController!.cameraFlashMode as UIImagePickerControllerCameraFlashMode
         let button = sender as! UIButton
         var iconName: String
         switch flashMode {
         case .auto:
-            self.imagePickerController?.cameraFlashMode = .on
+            imagePickerController?.cameraFlashMode = .on
             iconName = FlashIcon.on.rawValue
         case .on:
-            self.imagePickerController?.cameraFlashMode = .off
+            imagePickerController?.cameraFlashMode = .off
             iconName = FlashIcon.off.rawValue
         case .off:
-            self.imagePickerController?.cameraFlashMode = .auto
+            imagePickerController?.cameraFlashMode = .auto
             iconName = FlashIcon.auto.rawValue
         }
         button.setImage(UIImage(named: iconName), for: .normal)
     }
-    
-    // MARK: Delegates
-    // MARK: --- UIImagePickerControllerDelegate
+}
+
+// MARK: UIImagePickerControllerDelegate
+extension CucumberManager: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        // TODO: Make something with the captured image
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        imageManager.saveImage(image)
         
-        self.viewController.dismiss(animated: true) {
+        // TODO: Go to edit controller
+        delegate?.cumberManager(self, didFinishPickingImagesWithURLs: imageManager.cachedURLs)
+        
+        viewController.dismiss(animated: true) {
             picker.delegate = nil;
         }
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.viewController.dismiss(animated: true) {
+        viewController.dismiss(animated: true) {
             picker.delegate = nil;
         }
     }
+}
 
+extension CucumberManager {
+    func registerForPickingAssetsNotifications() {
+        NotificationCenter.default.addObserver(self, selector:
+            #selector(didFinishPickingAssets(notification:)),
+                                               name: CucumberNotification.didFinishPickingAssets.name,
+                                               object: nil)
+    }
     
+    func unregisterForPickingAssetsNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: CucumberNotification.didFinishPickingAssets.name,
+                                                  object: nil)
+    }
+    
+    func didFinishPickingAssets(notification: Notification) {
+        unregisterForPickingAssetsNotifications()
+        
+        // Cache selected assets
+        let selectedAssets = notification.userInfo?[CucumberNotificationObject.selectedAssets.rawValue] as! [PHAsset]
+        imageManager.setAssets(selectedAssets)
+        
+        // TODO: Go to edit controller
+        delegate?.cumberManager(self, didFinishPickingImagesWithURLs: imageManager.cachedURLs)
+        
+        // Dismiss controller
+        viewController.dismiss(animated: true, completion: {
+            [weak self] () in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.imagePickerController?.delegate = nil})
+    }
 }

@@ -7,17 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		562123C01E422FD4004EABD4 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562123BF1E422FD4004EABD4 /* EditViewController.swift */; };
+		562123C31E42383D004EABD4 /* EditAssetViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562123C21E42383D004EABD4 /* EditAssetViewCell.swift */; };
+		562123C51E42387A004EABD4 /* EditAssetReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562123C41E42387A004EABD4 /* EditAssetReusableView.swift */; };
 		5691385B1E378F6A00EA4CC2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5691385A1E378F6A00EA4CC2 /* AppDelegate.swift */; };
 		569138601E378F6A00EA4CC2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5691385E1E378F6A00EA4CC2 /* Main.storyboard */; };
 		569138621E378F6A00EA4CC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 569138611E378F6A00EA4CC2 /* Assets.xcassets */; };
 		569138651E378F6A00EA4CC2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 569138631E378F6A00EA4CC2 /* LaunchScreen.storyboard */; };
 		569138711E379E7800EA4CC2 /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569138701E379E7800EA4CC2 /* HomeCell.swift */; };
 		569138731E379EB800EA4CC2 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569138721E379EB800EA4CC2 /* HomeViewController.swift */; };
+		569C64FC1E40D41F009ECE8F /* CucumberPicker.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 569C64FB1E40D41F009ECE8F /* CucumberPicker.xcassets */; };
+		569C65001E40DC46009ECE8F /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569C64FF1E40DC46009ECE8F /* ImageManager.swift */; };
 		56F894BF1E3B3E95007234A5 /* CucumberManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894BB1E3B3E95007234A5 /* CucumberManager.swift */; };
 		56F894C01E3B3E95007234A5 /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56F894BE1E3B3E95007234A5 /* OverlayView.xib */; };
+		56F894C21E3B441E007234A5 /* CucumberPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56F894C11E3B441E007234A5 /* CucumberPicker.storyboard */; };
+		56F894C41E3B44F3007234A5 /* GridViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894C31E3B44F3007234A5 /* GridViewCell.swift */; };
+		56F894C81E3B463F007234A5 /* AlbumsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894C71E3B463F007234A5 /* AlbumsViewController.swift */; };
+		56F894CA1E3B467C007234A5 /* AssetGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894C91E3B467C007234A5 /* AssetGridViewController.swift */; };
+		56F894CE1E3B686F007234A5 /* UIStoryboard+Cucumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894CD1E3B686F007234A5 /* UIStoryboard+Cucumber.swift */; };
+		56F894D01E3B84B5007234A5 /* AlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894CF1E3B84B5007234A5 /* AlbumViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		562123BF1E422FD4004EABD4 /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		562123C21E42383D004EABD4 /* EditAssetViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAssetViewCell.swift; sourceTree = "<group>"; };
+		562123C41E42387A004EABD4 /* EditAssetReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAssetReusableView.swift; sourceTree = "<group>"; };
 		569138571E378F6A00EA4CC2 /* CucumberPicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CucumberPicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5691385A1E378F6A00EA4CC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5691385F1E378F6A00EA4CC2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -26,8 +40,16 @@
 		569138661E378F6A00EA4CC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		569138701E379E7800EA4CC2 /* HomeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomeCell.swift; path = Classes/Views/HomeCell.swift; sourceTree = "<group>"; };
 		569138721E379EB800EA4CC2 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomeViewController.swift; path = Classes/ViewControllers/HomeViewController.swift; sourceTree = "<group>"; };
+		569C64FB1E40D41F009ECE8F /* CucumberPicker.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CucumberPicker.xcassets; sourceTree = "<group>"; };
+		569C64FF1E40DC46009ECE8F /* ImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		56F894BB1E3B3E95007234A5 /* CucumberManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CucumberManager.swift; sourceTree = "<group>"; };
-		56F894BE1E3B3E95007234A5 /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
+		56F894BE1E3B3E95007234A5 /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OverlayView.xib; path = Views/OverlayView.xib; sourceTree = "<group>"; };
+		56F894C11E3B441E007234A5 /* CucumberPicker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = CucumberPicker.storyboard; path = Views/CucumberPicker.storyboard; sourceTree = "<group>"; };
+		56F894C31E3B44F3007234A5 /* GridViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridViewCell.swift; sourceTree = "<group>"; };
+		56F894C71E3B463F007234A5 /* AlbumsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumsViewController.swift; sourceTree = "<group>"; };
+		56F894C91E3B467C007234A5 /* AssetGridViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetGridViewController.swift; sourceTree = "<group>"; };
+		56F894CD1E3B686F007234A5 /* UIStoryboard+Cucumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIStoryboard+Cucumber.swift"; path = "Commons/Extensions/UIStoryboard+Cucumber.swift"; sourceTree = "<group>"; };
+		56F894CF1E3B84B5007234A5 /* AlbumViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +63,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		562123C11E4237F5004EABD4 /* SupplementaryViews */ = {
+			isa = PBXGroup;
+			children = (
+				562123C41E42387A004EABD4 /* EditAssetReusableView.swift */,
+			);
+			name = SupplementaryViews;
+			sourceTree = "<group>";
+		};
 		5691384E1E378F6A00EA4CC2 = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +137,7 @@
 		56F894B91E3B3E95007234A5 /* CucumberPicker */ = {
 			isa = PBXGroup;
 			children = (
+				56F894CB1E3B67FE007234A5 /* Commons */,
 				56F894BA1E3B3E95007234A5 /* Managers */,
 				56F894BC1E3B3E95007234A5 /* ViewControllers */,
 				56F894BD1E3B3E95007234A5 /* Views */,
@@ -118,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				56F894BB1E3B3E95007234A5 /* CucumberManager.swift */,
+				569C64FF1E40DC46009ECE8F /* ImageManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -125,6 +157,9 @@
 		56F894BC1E3B3E95007234A5 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				56F894C71E3B463F007234A5 /* AlbumsViewController.swift */,
+				56F894C91E3B467C007234A5 /* AssetGridViewController.swift */,
+				562123BF1E422FD4004EABD4 /* EditViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -132,9 +167,48 @@
 		56F894BD1E3B3E95007234A5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				56F894BE1E3B3E95007234A5 /* OverlayView.xib */,
+				562123C11E4237F5004EABD4 /* SupplementaryViews */,
+				56F894C61E3B4521007234A5 /* Cells */,
+				56F894C51E3B4501007234A5 /* Resources */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		56F894C51E3B4501007234A5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				56F894C11E3B441E007234A5 /* CucumberPicker.storyboard */,
+				56F894BE1E3B3E95007234A5 /* OverlayView.xib */,
+				569C64FB1E40D41F009ECE8F /* CucumberPicker.xcassets */,
+			);
+			name = Resources;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		56F894C61E3B4521007234A5 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				56F894CF1E3B84B5007234A5 /* AlbumViewCell.swift */,
+				56F894C31E3B44F3007234A5 /* GridViewCell.swift */,
+				562123C21E42383D004EABD4 /* EditAssetViewCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		56F894CB1E3B67FE007234A5 /* Commons */ = {
+			isa = PBXGroup;
+			children = (
+				56F894CC1E3B6816007234A5 /* Extensions */,
+			);
+			name = Commons;
+			sourceTree = "<group>";
+		};
+		56F894CC1E3B6816007234A5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				56F894CD1E3B686F007234A5 /* UIStoryboard+Cucumber.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,9 +272,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				569138651E378F6A00EA4CC2 /* LaunchScreen.storyboard in Resources */,
+				56F894C21E3B441E007234A5 /* CucumberPicker.storyboard in Resources */,
 				56F894C01E3B3E95007234A5 /* OverlayView.xib in Resources */,
 				569138621E378F6A00EA4CC2 /* Assets.xcassets in Resources */,
 				569138601E378F6A00EA4CC2 /* Main.storyboard in Resources */,
+				569C64FC1E40D41F009ECE8F /* CucumberPicker.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,10 +287,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				562123C51E42387A004EABD4 /* EditAssetReusableView.swift in Sources */,
 				569138711E379E7800EA4CC2 /* HomeCell.swift in Sources */,
+				569C65001E40DC46009ECE8F /* ImageManager.swift in Sources */,
+				56F894C41E3B44F3007234A5 /* GridViewCell.swift in Sources */,
+				562123C31E42383D004EABD4 /* EditAssetViewCell.swift in Sources */,
+				56F894C81E3B463F007234A5 /* AlbumsViewController.swift in Sources */,
 				56F894BF1E3B3E95007234A5 /* CucumberManager.swift in Sources */,
 				5691385B1E378F6A00EA4CC2 /* AppDelegate.swift in Sources */,
+				56F894CA1E3B467C007234A5 /* AssetGridViewController.swift in Sources */,
+				56F894CE1E3B686F007234A5 /* UIStoryboard+Cucumber.swift in Sources */,
 				569138731E379EB800EA4CC2 /* HomeViewController.swift in Sources */,
+				562123C01E422FD4004EABD4 /* EditViewController.swift in Sources */,
+				56F894D01E3B84B5007234A5 /* AlbumViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
