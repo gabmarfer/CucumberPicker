@@ -80,7 +80,9 @@ class ImageManager: NSObject {
     }
     
     fileprivate func saveAsset(_ asset: PHAsset) {
-        assetImageManager.requestImageData(for: asset, options: nil) { [weak self] (imageData, dataUTI, orientation, info) in
+        let options = PHImageRequestOptions()
+        options.isSynchronous = true
+        assetImageManager.requestImageData(for: asset, options: options) { [weak self] (imageData, dataUTI, orientation, info) in
             guard let strongSelf = self else {
                 return
             }

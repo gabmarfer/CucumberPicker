@@ -235,13 +235,6 @@ extension CucumberManager {
         delegate?.cumberManager(self, didFinishPickingImagesWithURLs: imageManager.cachedURLs)
         
         // Dismiss controller
-        viewController.dismiss(animated: true, completion: {
-            [weak self] () in
-            
-            guard let strongSelf = self else {
-                return
-            }
-            
-            strongSelf.imagePickerController?.delegate = nil})
+        viewController.dismiss(animated: true)
     }
 }
