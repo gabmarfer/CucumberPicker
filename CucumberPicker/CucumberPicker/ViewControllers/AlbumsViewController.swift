@@ -11,8 +11,9 @@ import Photos
 
 class AlbumsViewController: UITableViewController {
     
-    // MARK: Types for managing sections, cell and segue identifiers
-    enum Section: Int {
+    var selectedAssets = [PHAsset]()
+    
+    fileprivate enum Section: Int {
         case allPhotos = 0
         case smartAlbums
         case userCollections
@@ -20,28 +21,14 @@ class AlbumsViewController: UITableViewController {
         static let count = 3
     }
     
-    enum SegueIdentifier: String {
+    fileprivate enum SegueIdentifier: String {
         case showAllPhotos
         case showCollection
     }
     
-    // MARK: Properties
-    var selectedAssets = [PHAsset]()
-
-    fileprivate var allPhotos: PHFetchResult<PHAsset>!
-    fileprivate var smartAlbums: PHFetchResult<PHAssetCollection>!
-    fileprivate var userCollections: PHFetchResult<PHAssetCollection>!
     fileprivate var sectionLocalizedTitles = ["", NSLocalizedString("Smart Albums", comment: ""), NSLocalizedString("Albums", comment: "")]
     
-    fileprivate var filteredSmartAlbums = Array<PHAssetCollection>()
-    fileprivate var filteredUserCollections = Array<PHAssetCollection>()
-    
-    fileprivate var onlyImagesOption: PHFetchOptions {
-        let onlyImagesOption = PHFetchOptions()
-        onlyImagesOption.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        onlyImagesOption.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
-        return onlyImagesOption
-    }
+    fileprivate let assetManager = AssetManager()
     
     // MARK: ViewController Lifecycle
 
@@ -49,11 +36,20 @@ class AlbumsViewController: UITableViewController {
         super.viewDidLoad()
         
         setupUI()
+        
+        NotificationCenter.default.addObserver(forName: AssetManager.AssetManagerNotification.didUpdateSmartAlbums.name,
+                                               object: nil, queue: OperationQueue.main) { [weak self] (notification) in
+                                                guard let strongSelf = self else { return }
+                                                strongSelf.tableView.reloadSections(IndexSet(integer: Section.smartAlbums.rawValue), with: .automatic)
+        }
+        
+        NotificationCenter.default.addObserver(forName: AssetManager.AssetManagerNotification.didUpdateUserAlbums.name,
+                                               object: nil,
+                                               queue: OperationQueue.main) { [weak self] (notification) in
+                                                guard let strongSelf = self else { return }
+                                                strongSelf.tableView.reloadSections(IndexSet(integer: Section.userCollections.rawValue), with: .automatic)
+        }
 
-        loadAssets()
-        
-        PHPhotoLibrary.shared().register(self)
-        
         goToAllPhotos()
     }
     
@@ -63,10 +59,6 @@ class AlbumsViewController: UITableViewController {
         self.clearsSelectionOnViewWillAppear = true
     }
     
-    deinit {
-        PHPhotoLibrary.shared().unregisterChangeObserver(self)
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -93,65 +85,9 @@ class AlbumsViewController: UITableViewController {
         let viewControllerIdentifier = String(describing: AssetGridViewController.self)
         let assetGridViewController = storyboard?.instantiateViewController(withIdentifier: viewControllerIdentifier) as! AssetGridViewController
         assetGridViewController.delegate = self
-        assetGridViewController.fetchResult = allPhotos
+        assetGridViewController.fetchResult = assetManager.allPhotos
         assetGridViewController.title = NSLocalizedString("All Photos", comment: "")
         navigationController?.pushViewController(assetGridViewController, animated: false)
-    }
-    
-    // MARK: - Process Albums
-    func loadAssets(){
-        loadAllPhotos()
-        loadSmartAlbums()
-        loadUserCollections()
-    }
-    
-    func loadAllPhotos() {
-        allPhotos = PHAsset.fetchAssets(with: self.onlyImagesOption)
-    }
-    
-    func loadSmartAlbums() {
-        // Clean filtered collections.
-        filteredSmartAlbums.removeAll()
-        
-        // Get fetch result.
-        let smartAlbumOptions = PHFetchOptions()
-        smartAlbumOptions.sortDescriptors = [NSSortDescriptor(key: "localizedTitle", ascending: true)]
-        
-        // Filter to retrieve only smart albums with images.
-        let allSmartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .albumRegular, options: smartAlbumOptions)
-        allSmartAlbums.enumerateObjects(using: { [weak self] (obj, idx, stop) in
-            guard let strongSelf = self else {
-                return
-            }
-            
-            let assets = PHAsset.fetchAssets(in: obj, options: strongSelf.onlyImagesOption)
-            if assets.count > 0 {
-                strongSelf.filteredSmartAlbums.append(obj)
-            }
-        })
-    }
-    
-    func loadUserCollections() {
-        // Clean filtered collections.
-        filteredUserCollections.removeAll()
-
-        // Get fetch result.
-        let userCollectionOptions = PHFetchOptions()
-        userCollectionOptions.predicate = NSPredicate(format: "estimatedAssetCount > 0")
-        userCollectionOptions.sortDescriptors = [NSSortDescriptor(key: "localizedTitle", ascending: true)]
-
-        // Filter to retrieve only user collections with images
-        let allUserCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: userCollectionOptions)
-        allUserCollections.enumerateObjects(using: { [weak self] (obj, idx, stop) in
-            guard let strongSelf = self else {
-                return
-            }
-            let assets = PHAsset.fetchAssets(in: obj, options: strongSelf.onlyImagesOption)
-            if assets.count > 0 {
-                strongSelf.filteredUserCollections.append(obj)
-            }
-        })
-        
     }
     
     func configure(_ cell: AlbumViewCell, with assetCollection: PHAssetCollection) {
@@ -178,8 +114,8 @@ class AlbumsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         case .allPhotos: return 1
-        case .smartAlbums: return filteredSmartAlbums.count
-        case .userCollections: return filteredUserCollections.count
+        case .smartAlbums: return assetManager.filteredSmartAlbums.count
+        case .userCollections: return assetManager.filteredUserAlbums.count
         }
     }
     
@@ -191,20 +127,20 @@ class AlbumsViewController: UITableViewController {
             
         case .allPhotos:
             cell.nameLabel!.text = NSLocalizedString("All Photos", comment: "")
-            cell.countLabel!.text = String(allPhotos.count)
+            cell.countLabel!.text = String(assetManager.allPhotos.count)
             
             let scale = UIScreen.main.scale
             let thumbnailSize = CGSize(width: cell.coverImageView!.bounds.width * scale, height: cell.coverImageView!.bounds.height * scale)
-            PHImageManager.default().requestImage(for: allPhotos.lastObject!, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil, resultHandler: { (image, _) in
+            PHImageManager.default().requestImage(for: assetManager.allPhotos.lastObject!, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil, resultHandler: { (image, _) in
                 cell.coverImageView!.image = image
             })
             
         case .smartAlbums:
-            let smartAlbum = filteredSmartAlbums[indexPath.row]
+            let smartAlbum = assetManager.filteredSmartAlbums[indexPath.row]
             configure(cell, with: smartAlbum)
             
         case .userCollections:
-            let userCollection = filteredUserCollections[indexPath.row]
+            let userCollection = assetManager.filteredUserAlbums[indexPath.row]
             configure(cell, with: userCollection)
             
         }
@@ -245,7 +181,7 @@ class AlbumsViewController: UITableViewController {
         
         switch SegueIdentifier(rawValue: segue.identifier!)! {
             case .showAllPhotos:
-                destination.fetchResult = allPhotos
+                destination.fetchResult = assetManager.allPhotos
             
         case .showCollection:
             
@@ -254,9 +190,9 @@ class AlbumsViewController: UITableViewController {
             let collection: PHCollection
             switch Section(rawValue: indexPath.section)! {
                 case .smartAlbums:
-                    collection = filteredSmartAlbums[indexPath.row]
+                    collection = assetManager.filteredSmartAlbums[indexPath.row]
                 case .userCollections:
-                    collection = filteredUserCollections[indexPath.row]
+                    collection = assetManager.filteredUserAlbums[indexPath.row]
                 default: return // not reached; all photos section already handled by other segue
             }
             
@@ -267,35 +203,6 @@ class AlbumsViewController: UITableViewController {
         }
         
         destination.selectedAssets = selectedAssets
-    }
-
-}
-
-// MARK: PHPhotoLibraryChangeObserver
-extension AlbumsViewController: PHPhotoLibraryChangeObserver {
-    
-    func photoLibraryDidChange(_ changeInstance: PHChange) {
-        // Change notifications may be made on a background queue. Re-dispatch to the main queue
-        // before acting on the change as we'll be updating the UI.
-        DispatchQueue.main.sync {
-            // Check of the three top-level fetches for changes.
-            if let changeDetails = changeInstance.changeDetails(for: allPhotos) {
-                // Update the cached fetch result.
-                allPhotos = changeDetails.fetchResultAfterChanges
-                // (The table row for this one doesn't need updating, it always say "All Photos".)
-            }
-            
-            // Update the cached fetch results, and reload the table sections to match.
-            if let changeDetails = changeInstance.changeDetails(for: smartAlbums) {
-                smartAlbums = changeDetails.fetchResultAfterChanges
-                tableView.reloadSections(IndexSet(integer: Section.smartAlbums.rawValue), with: .automatic)
-            }
-            
-            if let changeDetails = changeInstance.changeDetails(for: userCollections) {
-                userCollections = changeDetails.fetchResultAfterChanges
-                tableView.reloadSections(IndexSet(integer: Section.userCollections.rawValue), with: .automatic)
-            }
-        }
     }
 }
 

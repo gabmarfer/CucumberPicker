@@ -20,26 +20,13 @@ class EditViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    fileprivate var selectedAssets = [PHAsset]()
-    fileprivate let imageManager = PHImageManager()
-    fileprivate var thumbnailSize: CGSize!
-    fileprivate var selectedImageSize: CGSize!
+    var imageURLs = Array<URL>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         collectionView.allowsSelection = true
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // Determine the size of the thumbnails to request from the PHCachingImageManager
-        let scale = UIScreen.main.scale
-        let cellSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
-        thumbnailSize = CGSize(width: cellSize.width * scale, height: cellSize.height * scale)
-        selectedImageSize = CGSize(width: imageView.bounds.width * scale, height: imageView.bounds.height * scale)
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,45 +46,28 @@ class EditViewController: UIViewController {
     func addImage(_ sender: Any) {
         
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
 extension EditViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return selectedAssets.count
+        return imageURLs.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: EditAssetViewCell.self),
                                                             for: indexPath) as? EditAssetViewCell else { fatalError() }
         
-        let asset = selectedAssets[indexPath.item]
-        imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil) { (image, _) in
-            cell.imageView.image = image
-        }
+        let fileURL = imageURLs[indexPath.item]
+        // TODO: Generate thumbnail
+        cell.imageView.image = UIImage(contentsOfFile: fileURL.path)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let asset = selectedAssets[indexPath.item]
-        imageManager.requestImage(for: asset, targetSize: selectedImageSize, contentMode: .aspectFit, options: nil) {
-            [weak self] (image, _) in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.imageView.image = image
-        }
+        let cell = collectionView.cellForItem(at: indexPath) as! EditAssetViewCell
+        imageView.image = cell.imageView.image
     }
 }
 

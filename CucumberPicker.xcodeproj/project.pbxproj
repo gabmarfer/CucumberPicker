@@ -10,6 +10,12 @@
 		562123C01E422FD4004EABD4 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562123BF1E422FD4004EABD4 /* EditViewController.swift */; };
 		562123C31E42383D004EABD4 /* EditAssetViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562123C21E42383D004EABD4 /* EditAssetViewCell.swift */; };
 		562123C51E42387A004EABD4 /* EditAssetReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562123C41E42387A004EABD4 /* EditAssetReusableView.swift */; };
+		562F8BF21E5AF46100FCA41C /* AAPhotoLibrary+Reader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562F8BEF1E5AF46100FCA41C /* AAPhotoLibrary+Reader.swift */; };
+		562F8BF31E5AF46100FCA41C /* AAPhotoLibrary+Writer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562F8BF01E5AF46100FCA41C /* AAPhotoLibrary+Writer.swift */; };
+		562F8BF41E5AF46100FCA41C /* AAPLErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562F8BF11E5AF46100FCA41C /* AAPLErrorHandler.swift */; };
+		562F8BF61E5B4F9200FCA41C /* UIImageFixedOrientationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562F8BF51E5B4F9200FCA41C /* UIImageFixedOrientationExtension.swift */; };
+		564FDDD81E49C07500286BD9 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564FDDD71E49C07500286BD9 /* CameraManager.swift */; };
+		564FDDDA1E49C08500286BD9 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564FDDD91E49C08500286BD9 /* AssetManager.swift */; };
 		5691385B1E378F6A00EA4CC2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5691385A1E378F6A00EA4CC2 /* AppDelegate.swift */; };
 		569138601E378F6A00EA4CC2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5691385E1E378F6A00EA4CC2 /* Main.storyboard */; };
 		569138621E378F6A00EA4CC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 569138611E378F6A00EA4CC2 /* Assets.xcassets */; };
@@ -17,7 +23,7 @@
 		569138711E379E7800EA4CC2 /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569138701E379E7800EA4CC2 /* HomeCell.swift */; };
 		569138731E379EB800EA4CC2 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569138721E379EB800EA4CC2 /* HomeViewController.swift */; };
 		569C64FC1E40D41F009ECE8F /* CucumberPicker.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 569C64FB1E40D41F009ECE8F /* CucumberPicker.xcassets */; };
-		569C65001E40DC46009ECE8F /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569C64FF1E40DC46009ECE8F /* ImageManager.swift */; };
+		569C65001E40DC46009ECE8F /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569C64FF1E40DC46009ECE8F /* ImageHelper.swift */; };
 		56F894BF1E3B3E95007234A5 /* CucumberManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894BB1E3B3E95007234A5 /* CucumberManager.swift */; };
 		56F894C01E3B3E95007234A5 /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56F894BE1E3B3E95007234A5 /* OverlayView.xib */; };
 		56F894C21E3B441E007234A5 /* CucumberPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56F894C11E3B441E007234A5 /* CucumberPicker.storyboard */; };
@@ -32,6 +38,12 @@
 		562123BF1E422FD4004EABD4 /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		562123C21E42383D004EABD4 /* EditAssetViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAssetViewCell.swift; sourceTree = "<group>"; };
 		562123C41E42387A004EABD4 /* EditAssetReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAssetReusableView.swift; sourceTree = "<group>"; };
+		562F8BEF1E5AF46100FCA41C /* AAPhotoLibrary+Reader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AAPhotoLibrary+Reader.swift"; sourceTree = "<group>"; };
+		562F8BF01E5AF46100FCA41C /* AAPhotoLibrary+Writer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AAPhotoLibrary+Writer.swift"; sourceTree = "<group>"; };
+		562F8BF11E5AF46100FCA41C /* AAPLErrorHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AAPLErrorHandler.swift; sourceTree = "<group>"; };
+		562F8BF51E5B4F9200FCA41C /* UIImageFixedOrientationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIImageFixedOrientationExtension.swift; path = Commons/Extensions/UIImageFixedOrientationExtension.swift; sourceTree = "<group>"; };
+		564FDDD71E49C07500286BD9 /* CameraManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		564FDDD91E49C08500286BD9 /* AssetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
 		569138571E378F6A00EA4CC2 /* CucumberPicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CucumberPicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5691385A1E378F6A00EA4CC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5691385F1E378F6A00EA4CC2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -41,7 +53,7 @@
 		569138701E379E7800EA4CC2 /* HomeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomeCell.swift; path = Classes/Views/HomeCell.swift; sourceTree = "<group>"; };
 		569138721E379EB800EA4CC2 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomeViewController.swift; path = Classes/ViewControllers/HomeViewController.swift; sourceTree = "<group>"; };
 		569C64FB1E40D41F009ECE8F /* CucumberPicker.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CucumberPicker.xcassets; sourceTree = "<group>"; };
-		569C64FF1E40DC46009ECE8F /* ImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		569C64FF1E40DC46009ECE8F /* ImageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
 		56F894BB1E3B3E95007234A5 /* CucumberManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CucumberManager.swift; sourceTree = "<group>"; };
 		56F894BE1E3B3E95007234A5 /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OverlayView.xib; path = Views/OverlayView.xib; sourceTree = "<group>"; };
 		56F894C11E3B441E007234A5 /* CucumberPicker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = CucumberPicker.storyboard; path = Views/CucumberPicker.storyboard; sourceTree = "<group>"; };
@@ -69,6 +81,25 @@
 				562123C41E42387A004EABD4 /* EditAssetReusableView.swift */,
 			);
 			name = SupplementaryViews;
+			sourceTree = "<group>";
+		};
+		562F8BED1E5AF42300FCA41C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				562F8BEE1E5AF46100FCA41C /* AAPhotoLibrary */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		562F8BEE1E5AF46100FCA41C /* AAPhotoLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				562F8BEF1E5AF46100FCA41C /* AAPhotoLibrary+Reader.swift */,
+				562F8BF01E5AF46100FCA41C /* AAPhotoLibrary+Writer.swift */,
+				562F8BF11E5AF46100FCA41C /* AAPLErrorHandler.swift */,
+			);
+			name = AAPhotoLibrary;
+			path = Commons/Utils/AAPhotoLibrary;
 			sourceTree = "<group>";
 		};
 		5691384E1E378F6A00EA4CC2 = {
@@ -149,7 +180,9 @@
 			isa = PBXGroup;
 			children = (
 				56F894BB1E3B3E95007234A5 /* CucumberManager.swift */,
-				569C64FF1E40DC46009ECE8F /* ImageManager.swift */,
+				569C64FF1E40DC46009ECE8F /* ImageHelper.swift */,
+				564FDDD71E49C07500286BD9 /* CameraManager.swift */,
+				564FDDD91E49C08500286BD9 /* AssetManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -198,6 +231,7 @@
 		56F894CB1E3B67FE007234A5 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				562F8BED1E5AF42300FCA41C /* Utils */,
 				56F894CC1E3B6816007234A5 /* Extensions */,
 			);
 			name = Commons;
@@ -206,6 +240,7 @@
 		56F894CC1E3B6816007234A5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				562F8BF51E5B4F9200FCA41C /* UIImageFixedOrientationExtension.swift */,
 				56F894CD1E3B686F007234A5 /* UIStoryboard+Cucumber.swift */,
 			);
 			name = Extensions;
@@ -289,16 +324,22 @@
 			files = (
 				562123C51E42387A004EABD4 /* EditAssetReusableView.swift in Sources */,
 				569138711E379E7800EA4CC2 /* HomeCell.swift in Sources */,
-				569C65001E40DC46009ECE8F /* ImageManager.swift in Sources */,
+				569C65001E40DC46009ECE8F /* ImageHelper.swift in Sources */,
+				562F8BF31E5AF46100FCA41C /* AAPhotoLibrary+Writer.swift in Sources */,
 				56F894C41E3B44F3007234A5 /* GridViewCell.swift in Sources */,
 				562123C31E42383D004EABD4 /* EditAssetViewCell.swift in Sources */,
+				562F8BF21E5AF46100FCA41C /* AAPhotoLibrary+Reader.swift in Sources */,
 				56F894C81E3B463F007234A5 /* AlbumsViewController.swift in Sources */,
 				56F894BF1E3B3E95007234A5 /* CucumberManager.swift in Sources */,
 				5691385B1E378F6A00EA4CC2 /* AppDelegate.swift in Sources */,
+				564FDDD81E49C07500286BD9 /* CameraManager.swift in Sources */,
+				562F8BF41E5AF46100FCA41C /* AAPLErrorHandler.swift in Sources */,
 				56F894CA1E3B467C007234A5 /* AssetGridViewController.swift in Sources */,
 				56F894CE1E3B686F007234A5 /* UIStoryboard+Cucumber.swift in Sources */,
 				569138731E379EB800EA4CC2 /* HomeViewController.swift in Sources */,
 				562123C01E422FD4004EABD4 /* EditViewController.swift in Sources */,
+				562F8BF61E5B4F9200FCA41C /* UIImageFixedOrientationExtension.swift in Sources */,
+				564FDDDA1E49C08500286BD9 /* AssetManager.swift in Sources */,
 				56F894D01E3B84B5007234A5 /* AlbumViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
