@@ -9,7 +9,7 @@
 import Foundation
 import Photos
 
-class AssetManager: NSObject {
+class AssetHelper: NSObject {
     
     let cucumberAlbumName = "Cucumber"
     
@@ -132,7 +132,7 @@ class AssetManager: NSObject {
 }
 
 // MARK: PHPhotoLibraryChangeObserver
-extension AssetManager: PHPhotoLibraryChangeObserver {
+extension AssetHelper: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         // Change notifications may be made on a background queue. Re-dispatch to the main queue
         // before acting on the change as we'll be updating the UI.

@@ -21,16 +21,23 @@ private extension UICollectionView {
     }
 }
 
-class AssetGridViewController: UICollectionViewController {
+class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol {
     
-    weak var delegate: AssetGridViewControllerDelegate?
+    var numberOfSelectableAssets: Int {
+        return CucumberManager.Custom.maxImages - selectedAssets.count - takenPhotos!
+    }
     
+    weak var albumsDelegate: AssetGridViewControllerDelegate?
+    weak var galleryDelegate: GalleryPickerDelegate?
     var fetchResult: PHFetchResult<PHAsset>!
     var selectedAssets = Array<PHAsset>()
-    
+    var takenPhotos: Int!
+
     fileprivate let assetImageManager = PHCachingImageManager()
+    fileprivate let imageHelper = ImageHelper()
     fileprivate var thumbnailSize: CGSize!
     fileprivate var previousPreheatRect = CGRect.zero
+    fileprivate var photosCompleted = 0
     
     // MARK: - ViewController Lifecycle
 
@@ -88,7 +95,7 @@ class AssetGridViewController: UICollectionViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         if (isMovingFromParentViewController) {
-            delegate?.assetGridViewController(self, didSelectAssets: selectedAssets)
+            albumsDelegate?.assetGridViewController(self, didSelectAssets: selectedAssets)
         }
         super.viewWillDisappear(animated)
     }
@@ -107,14 +114,13 @@ class AssetGridViewController: UICollectionViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: Actions
     func done(_ sender: AnyObject) {
-        let userInfo = [CucumberManager.CucumberNotificationObject.selectedAssets.rawValue: selectedAssets]
-        NotificationCenter.default.post(name: CucumberManager.CucumberNotification.didFinishPickingAssets.name,
-                                        object: nil,
-                                        userInfo: userInfo)
+        let urls = imageHelper.urlsForAssets(selectedAssets)
+        galleryDelegate?.galleryPickerController(self, didPickAssets: selectedAssets, withImageAtURLs: urls)
     }
     
-    // MARK: - UICollectionView
+    // MARK: UICollectionView
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return fetchResult.count
     }
@@ -138,22 +144,32 @@ class AssetGridViewController: UICollectionViewController {
         return cell
     }
     
+    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return numberOfSelectableAssets > 0
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = fetchResult.object(at: indexPath.item)
         if selectedAssets.contains(asset) {
             return
         }
         selectedAssets.append(asset)
+        
+        // Cache image
+        imageHelper.saveImageFromAsset(asset, resultHandler: nil)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let asset = fetchResult.object(at: indexPath.item)
         if let index = selectedAssets.index(of: asset) {
             selectedAssets.remove(at: index)
+            
+            // Remove cached image
+            imageHelper.removeImageFromAsset(asset)
         }
     }
     
-    // MARK: - Asset Caching
+    // MARK: Asset Caching
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateCachedAssets()

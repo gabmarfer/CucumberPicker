@@ -16,28 +16,18 @@ protocol CucumberDelegate: class {
 open class CucumberManager: NSObject {
     
     /// The maximum number of images to pick
-    static let maxImages = 6
-    
-    enum CucumberNotification: String {
-        case didFinishPickingAssets
-
-        var name: Notification.Name {
-            return Notification.Name(rawValue: self.rawValue)
-        }
-    }
-    
-    enum CucumberNotificationObject: String {
-        case selectedAssets
+    enum Custom {
+        static let maxImages = 5
     }
     
     weak var delegate: CucumberDelegate?
-    
+
     fileprivate var cameraManager: CameraManager!
-    fileprivate var viewController: UIViewController!
-    
     fileprivate var imageURLs = Array<URL>()
     fileprivate var selectedAssets = Array<PHAsset>()
-    
+    fileprivate var viewController: UIViewController!
+    fileprivate var senderButton: UIBarButtonItem!
+
     public init(_ viewController: UIViewController) {
         self.viewController = viewController
         
@@ -47,6 +37,8 @@ open class CucumberManager: NSObject {
     // MARK: Public methods
     
     func showImagePicker(fromButton button: UIBarButtonItem) {
+        senderButton = button
+        
         cameraManager.delegate = self
         cameraManager.showCamera(fromButton: button)
     }
@@ -59,13 +51,12 @@ open class CucumberManager: NSObject {
         let albumsViewController = storyboard.instantiateViewController(withIdentifier: viewControllerIdentifier) as! AlbumsViewController
         
         // Load cached assets
-//        albumsViewController.selectedAssets = imageManager.cachedAssets
-        
-        // Listen for notifications
-        registerForPickingAssetsNotifications()
+        albumsViewController.galleryDelegate = self
+        albumsViewController.selectedAssets = selectedAssets
+        albumsViewController.takenPhotos = (imageURLs.count - selectedAssets.count)
         
         let albumsNavigationController = UINavigationController(rootViewController: albumsViewController)
-        self.viewController.present(albumsNavigationController, animated: true, completion: nil)
+        self.viewController.present(albumsNavigationController, animated: false, completion: nil)
     }
     
     fileprivate func showEditViewController() {
@@ -73,15 +64,17 @@ open class CucumberManager: NSObject {
         let viewControllerIdentifier = String(describing: EditViewController.self)
         let editViewController = storyboard.instantiateViewController(withIdentifier: viewControllerIdentifier) as! EditViewController
         editViewController.imageURLs = imageURLs
+        editViewController.delegate = self
         
-        self.viewController.present(editViewController, animated: true, completion: nil)
+        self.viewController.present(editViewController, animated: false, completion: nil)
     }
 }
 
-// MARK: CameraManagerDelegate
+// MARK: - CameraManagerDelegate
 extension CucumberManager: CameraManagerDelegate {
     func cameraManager(_ manager: CameraManager, didPickImageAtURL url: URL) {
         manager.delegate = nil
+        
         imageURLs.append(url)
         
         showEditViewController()
@@ -93,32 +86,50 @@ extension CucumberManager: CameraManagerDelegate {
     }
 }
 
-// MARK: Notifications from Custom Gallery
-extension CucumberManager {
-    func registerForPickingAssetsNotifications() {
-        NotificationCenter.default.addObserver(self, selector:
-            #selector(didFinishPickingAssets(notification:)),
-                                               name: CucumberNotification.didFinishPickingAssets.name,
-                                               object: nil)
+// MARK: - Notifications from Custom Gallery
+extension CucumberManager: GalleryPickerDelegate {
+    func galleryPickerController<VC : UIViewController>(_ viewController: VC, didPickAssets assets: [PHAsset]?, withImageAtURLs urls: [URL]?) where VC : GalleryPickerProtocol {
+        self.viewController.dismiss(animated: false) { [weak self] in
+            viewController.galleryDelegate = nil
+            
+            guard let strongSelf = self else { return }
+            
+            if let pickedUrls = urls, let pickedAssets = assets {
+                strongSelf.imageURLs.append(contentsOf: pickedUrls)
+                strongSelf.selectedAssets = pickedAssets
+            }
+            
+            strongSelf.showEditViewController()
+        }
+    }
+}
+
+// MARK: 
+extension CucumberManager: EditViewControllerDelegate {
+    func editViewControllerDidCancel(_ editViewController: EditViewController) {
+        viewController.dismiss(animated: true) { 
+            editViewController.delegate = nil
+        }
     }
     
-    func unregisterForPickingAssetsNotifications() {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: CucumberNotification.didFinishPickingAssets.name,
-                                                  object: nil)
+    func editViewController(_ editViewController: EditViewController, didDoneWithItemsAt urls: [URL]) {
+        delegate?.cumberManager(self, didFinishPickingImagesWithURLs: imageURLs)
+        
+        viewController.dismiss(animated: true) {
+            editViewController.delegate = nil
+        }
     }
     
-    func didFinishPickingAssets(notification: Notification) {
-        unregisterForPickingAssetsNotifications()
+    func editViewControllerWillAddNewItem(_ editViewController: EditViewController, withCurrentItemsAt urls: [URL]) {
+        imageURLs = urls
         
-        // Cache selected assets
-        let selectedAssets = notification.userInfo?[CucumberNotificationObject.selectedAssets.rawValue] as! [PHAsset]
-//        imageManager.setAssets(selectedAssets)
-        
-        // TODO: Go to edit controller
-//        delegate?.cumberManager(self, didFinishPickingImagesWithURLs: imageManager.cachedURLs)
-        
-        // Dismiss controller
-        viewController.dismiss(animated: true)
+        viewController.dismiss(animated: false) { [weak self] in
+            editViewController.delegate = nil
+            
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.showImagePicker(fromButton: strongSelf.senderButton)
+        }
     }
 }

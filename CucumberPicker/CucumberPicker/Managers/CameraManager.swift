@@ -129,7 +129,7 @@ class CameraManager: NSObject {
     }
     
     @IBAction func pickFromGallery(_ sender: Any) {
-        viewController.dismiss(animated: true) { [weak self] in
+        viewController.dismiss(animated: false) { [weak self] in
             self?.imagePickerController?.delegate = nil;
         }
         delegate?.cameraManagerDidSelectOpenGallery(self)

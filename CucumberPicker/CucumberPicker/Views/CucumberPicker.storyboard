@@ -153,50 +153,54 @@
                                     <constraint firstAttribute="height" constant="64" id="teh-bm-prf"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="daO-22-9Gg">
-                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="itemSize" width="54" height="54"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="50" height="50"/>
+                                    <size key="footerReferenceSize" width="54" height="54"/>
                                     <inset key="sectionInset" minX="5" minY="0.0" maxX="5" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EditAssetViewCell" id="FpN-xB-XHu" customClass="EditAssetViewCell" customModule="CucumberPicker" customModuleProvider="target">
-                                        <rect key="frame" x="5" y="7" width="50" height="50"/>
+                                        <rect key="frame" x="5" y="5" width="54" height="54"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ub7-f5-qlI">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QaU-vW-4WG">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ub7-f5-qlI">
+                                                            <rect key="frame" x="2" y="2" width="50" height="50"/>
+                                                        </imageView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="Ub7-f5-qlI" secondAttribute="bottom" constant="2" id="6g9-eO-uLB"/>
+                                                        <constraint firstItem="Ub7-f5-qlI" firstAttribute="leading" secondItem="QaU-vW-4WG" secondAttribute="leading" constant="2" id="bYL-Uy-86j"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Ub7-f5-qlI" secondAttribute="trailing" constant="2" id="fRY-51-Abc"/>
+                                                        <constraint firstItem="Ub7-f5-qlI" firstAttribute="top" secondItem="QaU-vW-4WG" secondAttribute="top" constant="2" id="gwe-pf-cs7"/>
+                                                    </constraints>
                                                 </view>
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="QaU-vW-4WG" secondAttribute="trailing" id="228-yF-2ra"/>
-                                            <constraint firstItem="Ub7-f5-qlI" firstAttribute="leading" secondItem="FpN-xB-XHu" secondAttribute="leading" id="2yg-0Y-JEz"/>
-                                            <constraint firstAttribute="bottom" secondItem="Ub7-f5-qlI" secondAttribute="bottom" id="7JA-Qy-m0y"/>
-                                            <constraint firstItem="QaU-vW-4WG" firstAttribute="leading" secondItem="FpN-xB-XHu" secondAttribute="leading" id="9xl-En-IHV"/>
-                                            <constraint firstItem="QaU-vW-4WG" firstAttribute="top" secondItem="FpN-xB-XHu" secondAttribute="top" id="NtF-AU-W8H"/>
-                                            <constraint firstAttribute="bottom" secondItem="QaU-vW-4WG" secondAttribute="bottom" id="Ofk-Ge-Jly"/>
-                                            <constraint firstAttribute="trailing" secondItem="Ub7-f5-qlI" secondAttribute="trailing" id="Weg-M5-sOu"/>
-                                            <constraint firstItem="Ub7-f5-qlI" firstAttribute="top" secondItem="FpN-xB-XHu" secondAttribute="top" id="ahD-8V-GvG"/>
+                                            <constraint firstAttribute="trailing" secondItem="QaU-vW-4WG" secondAttribute="trailing" id="hAA-5f-5qD"/>
+                                            <constraint firstItem="QaU-vW-4WG" firstAttribute="top" secondItem="FpN-xB-XHu" secondAttribute="top" id="jff-O9-Wjx"/>
+                                            <constraint firstItem="QaU-vW-4WG" firstAttribute="leading" secondItem="FpN-xB-XHu" secondAttribute="leading" id="kYF-GQ-bPO"/>
+                                            <constraint firstAttribute="bottom" secondItem="QaU-vW-4WG" secondAttribute="bottom" id="yrB-n7-Jq2"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="imageView" destination="Ub7-f5-qlI" id="cSs-8S-D3P"/>
+                                            <outlet property="imageView" destination="Ub7-f5-qlI" id="brE-qZ-rdB"/>
                                             <outlet property="selectedOverlayView" destination="QaU-vW-4WG" id="z3z-XG-Zw0"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EditAssetReusableView" id="Dcg-g8-8lp" customClass="EditAssetReusableView" customModule="CucumberPicker" customModuleProvider="target">
-                                    <rect key="frame" x="60" y="0.0" width="50" height="64"/>
+                                    <rect key="frame" x="64" y="0.0" width="54" height="64"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7f6-WI-dxn">
-                                            <rect key="frame" x="0.0" y="7" width="50" height="50"/>
+                                            <rect key="frame" x="2" y="7" width="50" height="50"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="50" id="M43-Ir-L7A"/>
                                                 <constraint firstAttribute="width" secondItem="7f6-WI-dxn" secondAttribute="height" multiplier="1:1" id="mE8-Um-uAp"/>
