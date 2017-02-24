@@ -34,7 +34,7 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
     var takenPhotos: Int!
 
     fileprivate let assetImageManager = PHCachingImageManager()
-    fileprivate let imageHelper = ImageHelper()
+    fileprivate let imageCache = ImageCache()
     fileprivate var thumbnailSize: CGSize!
     fileprivate var previousPreheatRect = CGRect.zero
     fileprivate var photosCompleted = 0
@@ -116,7 +116,7 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
     
     // MARK: Actions
     func done(_ sender: AnyObject) {
-        let urls = imageHelper.urlsForAssets(selectedAssets)
+        let urls = imageCache.urlsForAssets(selectedAssets)
         galleryDelegate?.galleryPickerController(self, didPickAssets: selectedAssets, withImageAtURLs: urls)
     }
     
@@ -156,7 +156,7 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         selectedAssets.append(asset)
         
         // Cache image
-        imageHelper.saveImageFromAsset(asset, resultHandler: nil)
+        imageCache.saveImageFromAsset(asset, resultHandler: nil)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -165,7 +165,7 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
             selectedAssets.remove(at: index)
             
             // Remove cached image
-            imageHelper.removeImageFromAsset(asset)
+            imageCache.removeImageFromAsset(asset)
         }
     }
     

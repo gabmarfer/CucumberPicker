@@ -154,13 +154,13 @@
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="daO-22-9Gg">
                                     <size key="itemSize" width="54" height="54"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="54" height="54"/>
+                                    <size key="headerReferenceSize" width="54" height="54"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="5" minY="0.0" maxX="5" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EditAssetViewCell" id="FpN-xB-XHu" customClass="EditAssetViewCell" customModule="CucumberPicker" customModuleProvider="target">
-                                        <rect key="frame" x="5" y="5" width="54" height="54"/>
+                                        <rect key="frame" x="59" y="5" width="54" height="54"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
@@ -195,26 +195,25 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EditAssetReusableView" id="Dcg-g8-8lp" customClass="EditAssetReusableView" customModule="CucumberPicker" customModuleProvider="target">
-                                    <rect key="frame" x="64" y="0.0" width="54" height="64"/>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EditAssetReusableView" id="KzN-gW-4YD" customClass="EditAssetReusableView" customModule="CucumberPicker" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="54" height="64"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7f6-WI-dxn">
-                                            <rect key="frame" x="2" y="7" width="50" height="50"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bbz-iW-6CV">
+                                            <rect key="frame" x="-2" y="5" width="54" height="54"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="50" id="M43-Ir-L7A"/>
-                                                <constraint firstAttribute="width" secondItem="7f6-WI-dxn" secondAttribute="height" multiplier="1:1" id="mE8-Um-uAp"/>
+                                                <constraint firstAttribute="width" constant="54" id="VS9-Ms-dF0"/>
+                                                <constraint firstAttribute="width" secondItem="Bbz-iW-6CV" secondAttribute="height" multiplier="1:1" id="iVb-zm-ACX"/>
                                             </constraints>
-                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <state key="normal" image="edit-add-image"/>
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="7f6-WI-dxn" firstAttribute="centerX" secondItem="Dcg-g8-8lp" secondAttribute="centerX" id="5o5-dN-Dkn"/>
-                                        <constraint firstItem="7f6-WI-dxn" firstAttribute="centerY" secondItem="Dcg-g8-8lp" secondAttribute="centerY" id="xAF-fg-k1n"/>
+                                        <constraint firstItem="Bbz-iW-6CV" firstAttribute="centerY" secondItem="KzN-gW-4YD" secondAttribute="centerY" id="NUA-YZ-cov"/>
+                                        <constraint firstItem="Bbz-iW-6CV" firstAttribute="centerX" secondItem="KzN-gW-4YD" secondAttribute="centerX" id="dC0-nW-bTV"/>
                                     </constraints>
                                     <connections>
-                                        <outlet property="addImageButton" destination="7f6-WI-dxn" id="m7e-c9-tbE"/>
+                                        <outlet property="addImageButton" destination="Bbz-iW-6CV" id="pK8-Pk-feL"/>
                                     </connections>
                                 </collectionReusableView>
                                 <connections>

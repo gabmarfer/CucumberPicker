@@ -14,6 +14,7 @@ import MobileCoreServices
 import Photos
 
 protocol CameraManagerDelegate: class {
+    func cameraManagerDidCancel(_ manager: CameraManager)
     func cameraManager(_ manager: CameraManager, didPickImageAtURL url: URL)
     func cameraManagerDidSelectOpenGallery(_ manager: CameraManager)
 }
@@ -30,17 +31,19 @@ class CameraManager: NSObject {
     
     weak var delegate: CameraManagerDelegate?
     
-    fileprivate var viewController: UIViewController!
+    private(set) var presentingViewController: UIViewController!
     fileprivate var imagePickerController: UIImagePickerController?
-    fileprivate var imageHelper = ImageHelper()
+    fileprivate var imageCache = ImageCache()
     
-    public init(_ viewController: UIViewController) {
-        self.viewController = viewController
+    public init(_ presentingViewController: UIViewController) {
+        self.presentingViewController = presentingViewController
     }
     
     // MARK: Public methods
     
-    func showCamera(fromButton button: UIBarButtonItem) {
+    func showCamera(fromButton button: UIBarButtonItem, animated flag: Bool, from viewController: UIViewController) {
+        self.presentingViewController = viewController
+        
         // Check for permissions
         let authStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
         if (authStatus == .denied) {
@@ -65,11 +68,11 @@ class CameraManager: NSObject {
                                                     return
                                                 }
                                                 // Allowed access to camera, go ahead and present the UIImagePickerController.
-                                                strongSelf.showImagePicker(forSourceType: strongSelf.availableSourceType(), fromButton: button)
+                                                strongSelf.showImagePicker(forSourceType: strongSelf.availableSourceType(), fromButton: button, animated: flag)
                                             }
             })
         } else {
-            showImagePicker(forSourceType: availableSourceType(), fromButton: button)
+            showImagePicker(forSourceType: availableSourceType(), fromButton: button, animated: flag)
         }
     }
     
@@ -85,7 +88,7 @@ class CameraManager: NSObject {
         }
     }
     
-    fileprivate func showImagePicker(forSourceType sourceType: UIImagePickerControllerSourceType, fromButton button: UIBarButtonItem) {
+    fileprivate func showImagePicker(forSourceType sourceType: UIImagePickerControllerSourceType, fromButton button: UIBarButtonItem, animated flag: Bool) {
         if (sourceType == .camera) {
             let imagePickerController = UIImagePickerController()
             imagePickerController.modalPresentationStyle = .currentContext
@@ -117,7 +120,7 @@ class CameraManager: NSObject {
             
             self.imagePickerController = imagePickerController
             
-            viewController.present(self.imagePickerController!, animated: true, completion: nil)
+            presentingViewController.present(self.imagePickerController!, animated: flag, completion: nil)
         } else {
             delegate?.cameraManagerDidSelectOpenGallery(self)
         }
@@ -129,20 +132,14 @@ class CameraManager: NSObject {
     }
     
     @IBAction func pickFromGallery(_ sender: Any) {
-        viewController.dismiss(animated: false) { [weak self] in
-            self?.imagePickerController?.delegate = nil;
-        }
+        imagePickerController?.delegate = nil;
+        
         delegate?.cameraManagerDidSelectOpenGallery(self)
     }
     
     @IBAction func closeImagePicker(_ sender: Any) {
-        viewController.dismiss(animated: true) {
-            [weak self] in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.imagePickerController?.delegate = nil;
-        }
+        imagePickerController?.delegate = nil;
+        delegate?.cameraManagerDidCancel(self)
     }
     
     @IBAction func turnOnOffFlash(_ sender: Any) {
@@ -168,26 +165,18 @@ class CameraManager: NSObject {
 extension CameraManager: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.delegate = nil;
         
         // Save image to disk and notify the CucumberManager
-
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        let fileURL = imageCache.saveImage(image.fixedOrientation())
         
-        let fileURL = imageHelper.saveImage(image.fixedOrientation())
-        
-        self.viewController.dismiss(animated: false) { [weak self] in
-            guard let strongSelf = self else { return }
-            picker.delegate = nil;
-            
-            if let url = fileURL {
-                strongSelf.delegate?.cameraManager(strongSelf, didPickImageAtURL: url)
-            }
-        }
+        delegate?.cameraManager(self, didPickImageAtURL: fileURL!)
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        viewController.dismiss(animated: true) {
-            picker.delegate = nil;
-        }
+        picker.delegate = nil
+        
+        delegate?.cameraManagerDidCancel(self)
     }
 }

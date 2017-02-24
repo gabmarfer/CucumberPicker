@@ -80,7 +80,7 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
     
     // MARK: Actions
     func done(_ sender: AnyObject) {
-        let urls = ImageHelper().urlsForAssets(selectedAssets)
+        let urls = ImageCache().urlsForAssets(selectedAssets)
         galleryDelegate?.galleryPickerController(self, didPickAssets: selectedAssets, withImageAtURLs: urls)
     }
     
@@ -165,9 +165,9 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
         // Pass the selected object to the new view controller.
         
         // Assure that we are segue to AssetGridController
-        guard let assetGridViewController = segue.destination as? AssetGridViewController
-            else { fatalError("Unexpected view controller for segue") }
-        
+        guard let assetGridViewController = segue.destination as? AssetGridViewController else {
+                fatalError("Unexpected view controller for segue")
+        }
         
         // Configure basic properties of AssetGridController
         assetGridViewController.albumsDelegate = self

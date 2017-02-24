@@ -1,5 +1,5 @@
 //
-//  ImageHelper.swift
+//  ImageCache.swift
 //  CucumberPicker
 //
 //  Created by gabmarfer on 31/01/2017.
@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Photos
 
-class ImageHelper: NSObject {
+class ImageCache: NSObject {
     
     var maximumImageSize = CGSize(width: 1024.0, height: 1024.0)
     var mininumImageSize = CGSize(width: 400.0, height: 400.0)
@@ -19,6 +19,24 @@ class ImageHelper: NSObject {
     fileprivate let imageExtension = ".jpg"
     fileprivate var assetIdentifierKeys = Dictionary<String, String>() // <assetLocalIdentifier, imageKey>
     
+    // MARK: Utils
+    func thumbnailImageFromAsset(_ asset: PHAsset, of width: Int) -> UIImage? {
+        guard let imageKey = assetIdentifierKeys[asset.localIdentifier], let fileURL = cachedURLs[imageKey] else {
+            return nil
+        }
+        
+        guard let image = UIImage(contentsOfFile: fileURL.path) else {
+            return nil
+        }
+        
+        return thumbnailImageFromImage(image, of: width)
+    }
+    
+    func thumbnailImageFromImage(_ image: UIImage, of width: Int) -> UIImage {
+        return image.thumbnailImage(width, transparentBorder: 0, cornerRadius: 0, interpolationQuality: .high)
+    }
+
+    // MARK: Cache assets
     func saveImageFromAsset(_ asset: PHAsset, resultHandler: ((URL?) -> Void)?) {
         let requestOptions = PHImageRequestOptions()
         requestOptions.resizeMode = .exact
@@ -53,6 +71,7 @@ class ImageHelper: NSObject {
         return removeImage(named: key)
     }
     
+    // MARK: Cache images
     @discardableResult func saveImage(_ image: UIImage) -> URL? {
         return saveImage(image, named: randomImageKey())
     }
