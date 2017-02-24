@@ -66,6 +66,11 @@ class EditViewController: UIViewController {
     
     // MARK: Supplementary methods
     fileprivate func selectItemAtIndexPath(_ indexPath: IndexPath) {
+        if selectedIndexPath != nil && selectedIndexPath.compare(indexPath) != .orderedSame {
+            // Deselect old indexPath
+            collectionView.deselectItem(at: selectedIndexPath, animated: true)
+        }
+        
         selectedIndexPath = indexPath
         collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .left)
         let fileURL = imageURLs[indexPath.item]

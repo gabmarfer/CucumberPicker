@@ -16,6 +16,5 @@ class EditAssetViewCell: UICollectionViewCell {
         didSet {
             selectedOverlayView.isHidden = !isSelected
         }
-    }
-    
+    }    
 }

@@ -168,22 +168,18 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QaU-vW-4WG">
                                                     <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
-                                                    <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ub7-f5-qlI">
-                                                            <rect key="frame" x="2" y="2" width="50" height="50"/>
-                                                        </imageView>
-                                                    </subviews>
                                                     <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="Ub7-f5-qlI" secondAttribute="bottom" constant="2" id="6g9-eO-uLB"/>
-                                                        <constraint firstItem="Ub7-f5-qlI" firstAttribute="leading" secondItem="QaU-vW-4WG" secondAttribute="leading" constant="2" id="bYL-Uy-86j"/>
-                                                        <constraint firstAttribute="trailing" secondItem="Ub7-f5-qlI" secondAttribute="trailing" constant="2" id="fRY-51-Abc"/>
-                                                        <constraint firstItem="Ub7-f5-qlI" firstAttribute="top" secondItem="QaU-vW-4WG" secondAttribute="top" constant="2" id="gwe-pf-cs7"/>
-                                                    </constraints>
                                                 </view>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ub7-f5-qlI">
+                                                    <rect key="frame" x="2" y="2" width="50" height="50"/>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="Ub7-f5-qlI" secondAttribute="trailing" constant="2" id="E2V-h5-el9"/>
+                                            <constraint firstAttribute="bottom" secondItem="Ub7-f5-qlI" secondAttribute="bottom" constant="2" id="RtH-w0-fCS"/>
+                                            <constraint firstItem="Ub7-f5-qlI" firstAttribute="top" secondItem="FpN-xB-XHu" secondAttribute="top" constant="2" id="SZh-I8-gKZ"/>
+                                            <constraint firstItem="Ub7-f5-qlI" firstAttribute="leading" secondItem="FpN-xB-XHu" secondAttribute="leading" constant="2" id="bAw-KK-EF5"/>
                                             <constraint firstAttribute="trailing" secondItem="QaU-vW-4WG" secondAttribute="trailing" id="hAA-5f-5qD"/>
                                             <constraint firstItem="QaU-vW-4WG" firstAttribute="top" secondItem="FpN-xB-XHu" secondAttribute="top" id="jff-O9-Wjx"/>
                                             <constraint firstItem="QaU-vW-4WG" firstAttribute="leading" secondItem="FpN-xB-XHu" secondAttribute="leading" id="kYF-GQ-bPO"/>
