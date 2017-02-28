@@ -16,7 +16,7 @@ import Photos
 protocol CameraManagerDelegate: class {
     func cameraManagerDidCancel(_ manager: CameraManager)
     func cameraManager(_ manager: CameraManager, didPickImageAtURL url: URL)
-    func cameraManagerDidSelectOpenGallery(_ manager: CameraManager)
+    func cameraManagerShouldOpenGallery(_ manager: CameraManager)
 }
 
 class CameraManager: NSObject {
@@ -64,9 +64,7 @@ class CameraManager: NSObject {
                                           completionHandler: { [weak self] (granted) in
                                             // If access was denied, we do not set the setup error message since access was just denied.
                                             if (granted) {
-                                                guard let strongSelf = self else {
-                                                    return
-                                                }
+                                                guard let strongSelf = self else { return }
                                                 // Allowed access to camera, go ahead and present the UIImagePickerController.
                                                 strongSelf.showImagePicker(forSourceType: strongSelf.availableSourceType(), fromButton: button, animated: flag)
                                             }
@@ -122,7 +120,7 @@ class CameraManager: NSObject {
             
             presentingViewController.present(self.imagePickerController!, animated: flag, completion: nil)
         } else {
-            delegate?.cameraManagerDidSelectOpenGallery(self)
+            delegate?.cameraManagerShouldOpenGallery(self)
         }
     }
     
@@ -134,7 +132,11 @@ class CameraManager: NSObject {
     @IBAction func pickFromGallery(_ sender: Any) {
         imagePickerController?.delegate = nil;
         
-        delegate?.cameraManagerDidSelectOpenGallery(self)
+        // Dismiss camera before displaying the gallery
+        presentingViewController.dismiss(animated: false) { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.delegate?.cameraManagerShouldOpenGallery(strongSelf)
+        }
     }
     
     @IBAction func closeImagePicker(_ sender: Any) {

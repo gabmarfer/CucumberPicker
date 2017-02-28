@@ -77,9 +77,7 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         let lastIndexPath = IndexPath(item: (fetchResult.count - 1), section: 0)
         collectionView?.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
         DispatchQueue.main.async { [weak self] in
-            guard let strongSelf = self else {
-                return
-            }
+            guard let strongSelf = self else { return }
             strongSelf.collectionView?.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
         }
     }

@@ -119,9 +119,7 @@ class AssetHelper: NSObject {
         // Filter to retrieve only user collections with images
         var filteredResult = [PHAssetCollection]()
         fetchResult.enumerateObjects(using: { [weak self] (obj, idx, stop) in
-            guard let strongSelf = self else {
-                return
-            }
+            guard let strongSelf = self else { return  }
             let assets = PHAsset.fetchAssets(in: obj, options: strongSelf.onlyImagesOption)
             if assets.count > 0 {
                 filteredResult.append(obj)

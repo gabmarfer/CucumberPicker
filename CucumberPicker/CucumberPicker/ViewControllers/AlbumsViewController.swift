@@ -31,6 +31,7 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
     fileprivate enum SegueIdentifier: String {
         case showAllPhotos
         case showCollection
+        case showAllPhotosNoAnimation
     }
     
     fileprivate var sectionLocalizedTitles = ["", NSLocalizedString("Smart Albums", comment: ""), NSLocalizedString("Albums", comment: "")]
@@ -56,7 +57,7 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
                                                 strongSelf.tableView.reloadSections(IndexSet(integer: Section.userCollections.rawValue), with: .automatic)
         }
 
-        performSegue(withIdentifier: SegueIdentifier.showAllPhotos.rawValue, sender: nil)
+        performSegue(withIdentifier: SegueIdentifier.showAllPhotosNoAnimation.rawValue, sender: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -176,7 +177,7 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
         assetGridViewController.takenPhotos = takenPhotos
 
         switch SegueIdentifier(rawValue: segue.identifier!)! {
-            case .showAllPhotos:
+            case .showAllPhotos, .showAllPhotosNoAnimation:
                 assetGridViewController.fetchResult = assetHelper.allPhotos
                 assetGridViewController.title = NSLocalizedString("All Photos", comment: "")
             

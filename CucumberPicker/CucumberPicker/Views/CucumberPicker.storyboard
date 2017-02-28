@@ -94,6 +94,7 @@
                     <connections>
                         <segue destination="zLn-Hl-cBS" kind="show" identifier="showAllPhotos" id="Mur-ea-Zw4"/>
                         <segue destination="zLn-Hl-cBS" kind="show" identifier="showCollection" id="WXI-kg-U75"/>
+                        <segue destination="zLn-Hl-cBS" kind="show" identifier="showAllPhotosNoAnimation" customClass="PushNoAnimationSegue" customModule="CucumberPicker" customModuleProvider="target" id="uo5-ib-bUl"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="in0-BJ-QD2" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -196,7 +197,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bbz-iW-6CV">
-                                            <rect key="frame" x="-2" y="5" width="54" height="54"/>
+                                            <rect key="frame" x="0.0" y="5" width="54" height="54"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="54" id="VS9-Ms-dF0"/>
                                                 <constraint firstAttribute="width" secondItem="Bbz-iW-6CV" secondAttribute="height" multiplier="1:1" id="iVb-zm-ACX"/>
@@ -320,6 +321,6 @@
         <image name="overlay-close-white" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Mur-ea-Zw4"/>
+        <segue reference="uo5-ib-bUl"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -51,7 +51,7 @@ open class CucumberManager: NSObject {
         cameraManager.showCamera(fromButton: button, animated: flag, from: viewController)
     }
     
-    fileprivate func showCustomGalleryPicker(from viewController: UIViewController) {
+    fileprivate func showCustomGalleryPicker(from viewController: UIViewController, animated flag: Bool) {
         let storyboard = UIStoryboard.cucumberPickerStoryboard()
         let viewControllerIdentifier = String(describing: AlbumsViewController.self)
         let albumsViewController = storyboard.instantiateViewController(withIdentifier: viewControllerIdentifier) as! AlbumsViewController
@@ -62,7 +62,7 @@ open class CucumberManager: NSObject {
         albumsViewController.takenPhotos = (imageURLs.count - selectedAssets.count)
         
         let albumsNavigationController = UINavigationController(rootViewController: albumsViewController)
-        viewController.present(albumsNavigationController, animated: false, completion: nil)
+        viewController.present(albumsNavigationController, animated: flag, completion: nil)
     }
     
     fileprivate func showEditViewController() {
@@ -88,20 +88,6 @@ open class CucumberManager: NSObject {
 
 // MARK: - CameraManagerDelegate
 extension CucumberManager: CameraManagerDelegate {
-    func cameraManagerDidCancel(_ manager: CameraManager) {
-        manager.presentingViewController.dismiss(animated: true)
-    }
-    
-    func cameraManagerDidSelectOpenGallery(_ manager: CameraManager) {
-        manager.delegate = nil
-        
-        manager.presentingViewController.dismiss(animated: false) { [weak self] in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.showCustomGalleryPicker(from: manager.presentingViewController)
-        }
-    }
     
     func cameraManager(_ manager: CameraManager, didPickImageAtURL url: URL) {
         manager.delegate = nil
@@ -116,19 +102,26 @@ extension CucumberManager: CameraManagerDelegate {
             editViewController.imageURLs = imageURLs
         }
         
-        manager.presentingViewController.dismiss(animated: false) { [weak self] in
+        manager.presentingViewController.dismiss(animated: !isEditing) { [weak self] in
             // If editViewController is not displayed, show it now
             if !isEditing {
-                guard let strongSelf = self else {
-                    return
-                }
+                guard let strongSelf = self else { return }
                 
                 strongSelf.showEditViewController()
             }
         }
     }
     
-
+    func cameraManagerShouldOpenGallery(_ manager: CameraManager) {
+        manager.delegate = nil
+        
+        let shouldAnimate = !(manager.presentingViewController is EditViewController)
+        showCustomGalleryPicker(from: manager.presentingViewController, animated: shouldAnimate)
+    }
+    
+    func cameraManagerDidCancel(_ manager: CameraManager) {
+        manager.presentingViewController.dismiss(animated: true)
+    }
 }
 
 // MARK: - Notifications from Custom Gallery
@@ -151,19 +144,17 @@ extension CucumberManager: GalleryPickerDelegate {
         }
         
         
-        viewController.presentingViewController?.dismiss(animated: false) { [weak self] in
+        viewController.presentingViewController?.dismiss(animated: !isEditing) { [weak self] in
             // If editViewController is not displayed, show it now
             if !isEditing {
-                guard let strongSelf = self else {
-                    return
-                }
+                guard let strongSelf = self else {  return }
                 strongSelf.showEditViewController()
             }
         }
     }
 }
 
-// MARK: 
+// MARK: - EditViewControllerDelegate
 extension CucumberManager: EditViewControllerDelegate {
     func editViewControllerDidCancel(_ editViewController: EditViewController) {
         removeAllImages()
@@ -179,9 +170,7 @@ extension CucumberManager: EditViewControllerDelegate {
         viewController.dismiss(animated: true) { [weak self] in
             editViewController.delegate = nil
             
-            guard let strongSelf = self else {
-                return
-            }
+            guard let strongSelf = self else { return }
             strongSelf.removeAllImages()
         }
     }
@@ -191,14 +180,5 @@ extension CucumberManager: EditViewControllerDelegate {
         
         // Show image picker from editViewController
         showImagePicker(fromButton: senderButton, animated: false, from: editViewController)
-        
-//        viewController.dismiss(animated: false) { [weak self] in
-//            editViewController.delegate = nil
-//            
-//            guard let strongSelf = self else {
-//                return
-//            }
-//            strongSelf.showImagePicker(fromButton: strongSelf.senderButton, animated: false, from: editViewController)
-//        }
     }
 }
