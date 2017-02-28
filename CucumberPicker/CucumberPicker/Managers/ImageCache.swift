@@ -15,6 +15,23 @@ class ImageCache: NSObject {
     
     var maximumImageSize = CGSize(width: 1024.0, height: 1024.0)
     var mininumImageSize = CGSize(width: 400.0, height: 400.0)
+    
+    /// Ordered list of selected image URLs
+    private(set) var imageURLs = Array<URL>()
+    
+    var images: [UIImage] {
+        var images = [UIImage]()
+        do {
+            for fileURL in imageURLs {
+                let data = try Data(contentsOf: fileURL)
+                if let image = UIImage(data: data) {
+                    images.append(image)
+                }
+            }
+        } catch { print("Error \(error)") }
+        
+        return images
+    }
 
     fileprivate var cachedURLs = Dictionary<String, URL>() // <imageKey, fileURL>
     fileprivate let imageExtension = ".jpg"
@@ -82,6 +99,9 @@ class ImageCache: NSObject {
             let fileURL = getURL(for: filename)
             try FileManager.default.removeItem(at: fileURL)
             cachedURLs.removeValue(forKey: filename)
+            if let urlIdx = imageURLs.index(of: fileURL) {
+                imageURLs.remove(at: urlIdx)
+            }
 //            print("Removed image in path: \(fileURL)")
             return true
         } catch { return false }
@@ -112,6 +132,7 @@ class ImageCache: NSObject {
             try data.write(to: fileURL)
             // Save the path
             cachedURLs[filename] = fileURL
+            imageURLs.append(fileURL)
 //            print("Saved image in path: \(fileURL)")
             return fileURL
         } catch {

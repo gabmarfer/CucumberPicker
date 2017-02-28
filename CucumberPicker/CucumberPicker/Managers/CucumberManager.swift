@@ -10,7 +10,7 @@ import Foundation
 import Photos
 
 protocol CucumberDelegate: class {
-    func cumberManager(_ manager: CucumberManager, didFinishPickingImagesWithURLs urls: [URL])
+    func cumberManager(_ manager: CucumberManager, didFinishPickingImages images: [UIImage])
 }
 
 open class CucumberManager: NSObject {
@@ -27,9 +27,6 @@ open class CucumberManager: NSObject {
     fileprivate var senderButton: UIBarButtonItem!
     
     fileprivate let imageCache = ImageCache()
-    
-    /// Keep track of cached image URLs
-    fileprivate var imageURLs = [URL]()
     
     /// Keep track of selected assets to allow select/deselect them
     fileprivate var selectedAssets = [PHAsset]()
@@ -67,7 +64,7 @@ open class CucumberManager: NSObject {
         // Load cached assets
         albumsViewController.galleryDelegate = self
         albumsViewController.selectedAssets = selectedAssets
-        albumsViewController.takenPhotos = (imageURLs.count - selectedAssets.count)
+        albumsViewController.takenPhotos = (imageCache.imageURLs.count - selectedAssets.count)
         albumsViewController.imageCache = imageCache
         
         let albumsNavigationController = UINavigationController(rootViewController: albumsViewController)
@@ -75,7 +72,7 @@ open class CucumberManager: NSObject {
     }
     
     fileprivate func showEditViewController() {
-        guard imageURLs.count > 0 else {
+        guard imageCache.imageURLs.count > 0 else {
             print("Error trying to show EditViewController: imageURLs is empty")
             return
         }
@@ -83,7 +80,6 @@ open class CucumberManager: NSObject {
         let storyboard = UIStoryboard.cucumberPickerStoryboard()
         let viewControllerIdentifier = String(describing: EditViewController.self)
         let editViewController = storyboard.instantiateViewController(withIdentifier: viewControllerIdentifier) as! EditViewController
-        editViewController.imageURLs = imageURLs
         editViewController.delegate = self
         editViewController.imageCache = imageCache
         
@@ -92,7 +88,6 @@ open class CucumberManager: NSObject {
     
     fileprivate func removeAllImages() {
         selectedAssets.removeAll()
-        imageURLs.removeAll()
         imageCache.removeAllImages()
     }
 }
@@ -103,18 +98,9 @@ extension CucumberManager: CameraManagerDelegate {
     func cameraManager(_ manager: CameraManager, didPickImageAtURL url: URL) {
         manager.delegate = nil
         
-        imageURLs.append(url)
-        
-        let isEditing = manager.presentingViewController is EditViewController
-        
-        if isEditing {
-            // Just update the image urls of the editViewController before dismissing the picker
-            let editViewController = manager.presentingViewController as! EditViewController
-            editViewController.imageURLs = imageURLs
-        }
-        
         manager.presentingViewController.dismiss(animated: false) { [weak self] in
             // If editViewController is not displayed, show it now
+            let isEditing = manager.presentingViewController is EditViewController
             if !isEditing {
                 guard let strongSelf = self else { return }
                 strongSelf.showEditViewController()
@@ -134,33 +120,17 @@ extension CucumberManager: CameraManagerDelegate {
 
 // MARK: - GalleryPickerDelegate
 extension CucumberManager: GalleryPickerDelegate {
-    func galleryPickerController<VC : UIViewController>(_ viewController: VC, didPickAssets assets: [PHAsset]?, withImageAtURLs urls: [URL]?) where VC : GalleryPickerProtocol {
+    func galleryPickerController<VC : UIViewController>(_ viewController: VC, didPickAssets assets: [PHAsset]?) where VC : GalleryPickerProtocol {
         viewController.galleryDelegate = nil
         
         // Update assets & image urls
-        if let pickedUrls = urls, let pickedAssets = assets {
-            // Avoid apending duplicate urls
-            for url in pickedUrls {
-                if !imageURLs.contains(url) {
-                    imageURLs.append(url)
-                }
-                // FIXME: Remove deselected assets!
-                
-            }
+        if let pickedAssets = assets {
             selectedAssets = pickedAssets
         }
         
-        let isEditing = viewController.presentingViewController is EditViewController
-        
-        if isEditing {
-            // Just update the image urls of the editViewController before dismissing the gallery picker
-            let editViewController = viewController.presentingViewController as! EditViewController
-            editViewController.imageURLs = imageURLs
-        }
-        
-        
         viewController.presentingViewController?.dismiss(animated: false) { [weak self] in
             // If editViewController is not displayed, show it now
+            let isEditing = viewController.presentingViewController is EditViewController
             if !isEditing {
                 guard let strongSelf = self else {  return }
                 strongSelf.showEditViewController()
@@ -179,20 +149,17 @@ extension CucumberManager: EditViewControllerDelegate {
         }
     }
     
-    func editViewController(_ editViewController: EditViewController, didDoneWithItemsAt urls: [URL]) {
-        delegate?.cumberManager(self, didFinishPickingImagesWithURLs: imageURLs)
+    func editViewControllerDidFinishEditing(_ editViewController: EditViewController) {
+        delegate?.cumberManager(self, didFinishPickingImages: imageCache.images)
         
         viewController.dismiss(animated: true) { [weak self] in
             editViewController.delegate = nil
-            
             guard let strongSelf = self else { return }
             strongSelf.removeAllImages()
         }
     }
     
-    func editViewControllerWillAddNewItem(_ editViewController: EditViewController, withCurrentItemsAt urls: [URL]) {
-        imageURLs = urls
-        
+    func editViewControllerWillAddNewItem(_ editViewController: EditViewController) {
         // Show image picker from editViewController
         showImagePicker(fromButton: senderButton, animated: false, from: editViewController)
     }

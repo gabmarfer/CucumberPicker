@@ -11,7 +11,7 @@ import UIKit
 class HomeViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     static let HomeCellIdentifier = "HomeCell"
     
-    var imagePaths = [URL]()
+    var images = [UIImage]()
     var cucumberManager: CucumberManager!
     
     override func viewDidLoad() {
@@ -21,6 +21,8 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
         cucumberManager = CucumberManager(self)
         cucumberManager.delegate = self
         
+        
+        perform(#selector(handleTapCameraButton(_:)), with: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,15 +36,13 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imagePaths.count
+        return images.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeViewController.HomeCellIdentifier, for: indexPath) as! HomeCell
         
-        let filePath = imagePaths[indexPath.row].path
-        let image = UIImage(contentsOfFile: filePath)
-        cell.imgView.image = image
+        cell.imgView.image = images[indexPath.item]
         
         return cell
     }
@@ -60,8 +60,8 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
 }
 
 extension HomeViewController: CucumberDelegate {
-    func cumberManager(_ manager: CucumberManager, didFinishPickingImagesWithURLs urls: [URL]) {
-        imagePaths = urls
+    func cumberManager(_ manager: CucumberManager, didFinishPickingImages images: [UIImage]) {
+        self.images = images
         collectionView?.reloadData()
     }
 }

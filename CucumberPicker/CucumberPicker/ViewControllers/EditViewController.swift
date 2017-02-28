@@ -11,8 +11,8 @@ import Photos
 
 protocol EditViewControllerDelegate: class {
     func editViewControllerDidCancel(_ editViewController: EditViewController)
-    func editViewController(_ editViewController: EditViewController, didDoneWithItemsAt urls: [URL])
-    func editViewControllerWillAddNewItem(_ editViewController: EditViewController, withCurrentItemsAt urls: [URL])
+    func editViewControllerDidFinishEditing(_ editViewController: EditViewController)
+    func editViewControllerWillAddNewItem(_ editViewController: EditViewController)
 }
 
 class EditViewController: UIViewController {
@@ -23,8 +23,6 @@ class EditViewController: UIViewController {
     
     weak var delegate: EditViewControllerDelegate?
     var imageCache: ImageCache!
-    
-    var imageURLs = Array<URL>()
     
     fileprivate var selectedIndexPath: IndexPath!
     
@@ -58,11 +56,11 @@ class EditViewController: UIViewController {
 
 
     @IBAction func doneEditing(_ sender: Any) {
-        delegate?.editViewController(self, didDoneWithItemsAt: imageURLs)
+        delegate?.editViewControllerDidFinishEditing(self)
     }
     
     func addImage(_ sender: Any) {
-        delegate?.editViewControllerWillAddNewItem(self, withCurrentItemsAt: imageURLs)
+        delegate?.editViewControllerWillAddNewItem(self)
     }
     
     // MARK: Supplementary methods
@@ -74,7 +72,7 @@ class EditViewController: UIViewController {
         
         selectedIndexPath = indexPath
         collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .left)
-        let fileURL = imageURLs[indexPath.item]
+        let fileURL = imageCache.imageURLs[indexPath.item]
         imageView.image = UIImage(contentsOfFile: fileURL.path)
     }
 }
@@ -82,14 +80,14 @@ class EditViewController: UIViewController {
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension EditViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageURLs.count
+        return imageCache.imageURLs.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: EditAssetViewCell.self),
                                                             for: indexPath) as? EditAssetViewCell else { fatalError() }
         
-        let fileURL = imageURLs[indexPath.item]
+        let fileURL = imageCache.imageURLs[indexPath.item]
         if let image = UIImage(contentsOfFile: fileURL.path) {
             cell.imageView.image = imageCache.thumbnailImageFromImage(image, of: Int(cell.imageView.bounds.width))
         }
@@ -119,6 +117,6 @@ extension EditViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
         // Hide add button if we have reached the images limit
-        return imageURLs.count < CucumberManager.Custom.maxImages ? flowLayout.headerReferenceSize : CGSize.zero
+        return imageCache.imageURLs.count < CucumberManager.Custom.maxImages ? flowLayout.headerReferenceSize : CGSize.zero
     }
 }

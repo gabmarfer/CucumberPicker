@@ -118,8 +118,7 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
     
     // MARK: Actions
     func done(_ sender: AnyObject) {
-        let urls = imageCache.urlsForAssets(selectedAssets)
-        galleryDelegate?.galleryPickerController(self, didPickAssets: selectedAssets, withImageAtURLs: urls)
+        galleryDelegate?.galleryPickerController(self, didPickAssets: selectedAssets)
     }
     
     // MARK: UICollectionView
