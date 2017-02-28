@@ -11,7 +11,7 @@ import UIKit
 import Photos
 
 protocol GalleryPickerDelegate: class {
-    func galleryPickerController<VC: UIViewController>(_ viewController: VC, didPickAssets assets: [PHAsset]?) where VC: GalleryPickerProtocol
+    func galleryPickerControllerDidFinishPickingAssets<VC: UIViewController>(_ viewController: VC) where VC: GalleryPickerProtocol
 }
 
 protocol GalleryPickerProtocol: class {

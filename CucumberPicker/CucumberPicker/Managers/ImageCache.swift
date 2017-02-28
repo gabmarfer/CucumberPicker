@@ -19,6 +19,9 @@ class ImageCache: NSObject {
     /// Ordered list of selected image URLs
     private(set) var imageURLs = Array<URL>()
     
+    /// Set of selected assets to allow deselect them
+    private(set) var selectedAssets = Set<PHAsset>()
+    
     var images: [UIImage] {
         var images = [UIImage]()
         do {
@@ -31,6 +34,10 @@ class ImageCache: NSObject {
         } catch { print("Error \(error)") }
         
         return images
+    }
+    
+    var numberOfTakenPhotos: Int {
+        return imageURLs.count - selectedAssets.count
     }
 
     fileprivate var cachedURLs = Dictionary<String, URL>() // <imageKey, fileURL>
@@ -66,7 +73,9 @@ class ImageCache: NSObject {
             
             guard let strongSelf = self else { return }
             
-            if let imateToSave = image, let url = strongSelf.saveImage(imateToSave, named: strongSelf.keyForAsset(asset)) {
+            if let imageToSave = image, let url = strongSelf.saveImage(imageToSave, named: strongSelf.keyForAsset(asset)) {
+                guard let strongSelf = self else { return }
+                strongSelf.selectedAssets.insert(asset)
                 resultHandler?(url)
             } else {
                 resultHandler?(nil)
@@ -86,6 +95,7 @@ class ImageCache: NSObject {
     
     @discardableResult func removeImageFromAsset(_ asset: PHAsset) -> Bool {
         let key = keyForAsset(asset)
+        selectedAssets.remove(asset)
         return removeImage(named: key)
     }
     
@@ -112,6 +122,7 @@ class ImageCache: NSObject {
         for (filename, _) in cachedURLs {
             result = removeImage(named: filename)
         }
+        selectedAssets.removeAll()
         return result
     }
     

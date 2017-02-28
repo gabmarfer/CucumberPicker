@@ -10,10 +10,6 @@ import UIKit
 import Photos
 import PhotosUI
 
-protocol AssetGridViewControllerDelegate: class {
-    func assetGridViewController(_ assetGridViewController: AssetGridViewController, didSelectAssets assets: [PHAsset])
-}
-
 private extension UICollectionView {
     func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
         let allLayoutAttributes = collectionViewLayout.layoutAttributesForElements(in: rect)!
@@ -24,14 +20,11 @@ private extension UICollectionView {
 class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol {
     
     var numberOfSelectableAssets: Int {
-        return CucumberManager.Custom.maxImages - selectedAssets.count - takenPhotos!
+        return CucumberManager.Custom.maxImages - imageCache.imageURLs.count
     }
     
-    weak var albumsDelegate: AssetGridViewControllerDelegate?
     weak var galleryDelegate: GalleryPickerDelegate?
     var fetchResult: PHFetchResult<PHAsset>!
-    var selectedAssets: Array<PHAsset>!
-    var takenPhotos: Int!
     var imageCache: ImageCache!
 
     fileprivate let assetImageManager = PHCachingImageManager()
@@ -64,7 +57,7 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         
         
         // Select previously selected items.
-        for asset in selectedAssets {
+        for asset in Array(imageCache.selectedAssets) {
             let index = fetchResult.index(of: asset)
             if index != NSNotFound {
                 let indexPath = IndexPath(item: index, section: 0)
@@ -83,7 +76,6 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         }
         
         configureGalleryToolbar()
-        updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -93,13 +85,8 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         let scale = UIScreen.main.scale
         let cellSize = (collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         thumbnailSize = CGSize(width: cellSize.width * scale, height: cellSize.height * scale)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        if (isMovingFromParentViewController) {
-            albumsDelegate?.assetGridViewController(self, didSelectAssets: selectedAssets)
-        }
-        super.viewWillDisappear(animated)
+        
+        updateGalleryToolbarTitle(selected: imageCache.imageURLs.count, of: CucumberManager.Custom.maxImages)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -118,7 +105,7 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
     
     // MARK: Actions
     func done(_ sender: AnyObject) {
-        galleryDelegate?.galleryPickerController(self, didPickAssets: selectedAssets)
+        galleryDelegate?.galleryPickerControllerDidFinishPickingAssets(self)
     }
     
     // MARK: UICollectionView
@@ -151,33 +138,28 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = fetchResult.object(at: indexPath.item)
-        if selectedAssets.contains(asset) {
-            return
-        }
-        selectedAssets.append(asset)
         
         // Cache image
-        imageCache.saveImageFromAsset(asset, resultHandler: nil)
-        
-        // Update the toolbar
-        updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
+        imageCache.saveImageFromAsset(asset) { [weak self] (url) in
+            // Update the toolbar
+            guard let strongSelf = self else { return }
+            strongSelf.updateGalleryToolbarTitle(selected: strongSelf.imageCache.imageURLs.count, of: CucumberManager.Custom.maxImages)
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let asset = fetchResult.object(at: indexPath.item)
-        if let index = selectedAssets.index(of: asset) {
-            selectedAssets.remove(at: index)
-            
-            // Remove cached image
-            imageCache.removeImageFromAsset(asset)
-            
-            // Update the toolbar
-            updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
-        }
+        
+        // Remove cached image
+        imageCache.removeImageFromAsset(asset)
+        
+        // Update the toolbar
+        updateGalleryToolbarTitle(selected: imageCache.imageURLs.count, of: CucumberManager.Custom.maxImages)
     }
-    
-    // MARK: Asset Caching
-    
+}
+
+// MARK: - Asset caching
+extension AssetGridViewController {
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateCachedAssets()
     }

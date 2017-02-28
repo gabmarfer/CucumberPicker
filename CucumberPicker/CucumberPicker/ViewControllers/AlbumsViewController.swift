@@ -14,12 +14,11 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
     weak var galleryDelegate: GalleryPickerDelegate?
     
     var numberOfSelectableAssets: Int {
-        return CucumberManager.Custom.maxImages - selectedAssets.count - takenPhotos
+        return CucumberManager.Custom.maxImages - imageCache.imageURLs.count
     }
     
     var takenPhotos: Int!
     var imageCache: ImageCache!
-    var selectedAssets = [PHAsset]()
     
     fileprivate enum Section: Int {
         case allPhotos = 0
@@ -51,7 +50,6 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
         registerForNotifications()
         
         configureGalleryToolbar()
-        updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
 
         performSegue(withIdentifier: SegueIdentifier.showAllPhotosNoAnimation.rawValue, sender: nil)
     }
@@ -60,6 +58,8 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
         super.viewWillAppear(animated)
         
         self.clearsSelectionOnViewWillAppear = true
+        
+        updateGalleryToolbarTitle(selected: imageCache.imageURLs.count, of: CucumberManager.Custom.maxImages)
     }
     
     override func didReceiveMemoryWarning() {
@@ -74,7 +74,7 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
     // MARK: Actions
     
     func done(_ sender: AnyObject) {
-        galleryDelegate?.galleryPickerController(self, didPickAssets: selectedAssets)
+        galleryDelegate?.galleryPickerControllerDidFinishPickingAssets(self)
     }
     
     // MARK: Supplementary methods
@@ -163,10 +163,7 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
         }
         
         // Configure basic properties of AssetGridController
-        assetGridViewController.albumsDelegate = self
         assetGridViewController.galleryDelegate = galleryDelegate
-        assetGridViewController.selectedAssets = selectedAssets
-        assetGridViewController.takenPhotos = takenPhotos
         assetGridViewController.imageCache = imageCache
 
         switch SegueIdentifier(rawValue: segue.identifier!)! {
@@ -225,15 +222,5 @@ extension AlbumsViewController {
         NotificationCenter.default.removeObserver(self,
                                                   name: AssetHelper.AssetManagerNotification.didUpdateUserAlbums.name,
                                                   object: nil)
-    }
-}
-
-// MARK: - AssetGridViewControllerDelegate
-extension AlbumsViewController: AssetGridViewControllerDelegate {
-    func assetGridViewController(_ assetGridViewController: AssetGridViewController, didSelectAssets assets: [PHAsset]) {
-        assetGridViewController.albumsDelegate =  nil
-        selectedAssets = assets
-        
-        updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
     }
 }

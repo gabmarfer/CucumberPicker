@@ -27,10 +27,6 @@ open class CucumberManager: NSObject {
     fileprivate var senderButton: UIBarButtonItem!
     
     fileprivate let imageCache = ImageCache()
-    
-    /// Keep track of selected assets to allow select/deselect them
-    fileprivate var selectedAssets = [PHAsset]()
-    
 
     public init(_ viewController: UIViewController) {
         self.viewController = viewController
@@ -63,8 +59,6 @@ open class CucumberManager: NSObject {
         
         // Load cached assets
         albumsViewController.galleryDelegate = self
-        albumsViewController.selectedAssets = selectedAssets
-        albumsViewController.takenPhotos = (imageCache.imageURLs.count - selectedAssets.count)
         albumsViewController.imageCache = imageCache
         
         let albumsNavigationController = UINavigationController(rootViewController: albumsViewController)
@@ -85,11 +79,6 @@ open class CucumberManager: NSObject {
         
         self.viewController.present(editViewController, animated: false, completion: nil)
     }
-    
-    fileprivate func removeAllImages() {
-        selectedAssets.removeAll()
-        imageCache.removeAllImages()
-    }
 }
 
 // MARK: - CameraManagerDelegate
@@ -98,9 +87,9 @@ extension CucumberManager: CameraManagerDelegate {
     func cameraManager(_ manager: CameraManager, didPickImageAtURL url: URL) {
         manager.delegate = nil
         
+        let isEditing = manager.presentingViewController is EditViewController
         manager.presentingViewController.dismiss(animated: false) { [weak self] in
             // If editViewController is not displayed, show it now
-            let isEditing = manager.presentingViewController is EditViewController
             if !isEditing {
                 guard let strongSelf = self else { return }
                 strongSelf.showEditViewController()
@@ -120,17 +109,12 @@ extension CucumberManager: CameraManagerDelegate {
 
 // MARK: - GalleryPickerDelegate
 extension CucumberManager: GalleryPickerDelegate {
-    func galleryPickerController<VC : UIViewController>(_ viewController: VC, didPickAssets assets: [PHAsset]?) where VC : GalleryPickerProtocol {
+    func galleryPickerControllerDidFinishPickingAssets<VC : UIViewController>(_ viewController: VC) where VC : GalleryPickerProtocol {
         viewController.galleryDelegate = nil
         
-        // Update assets & image urls
-        if let pickedAssets = assets {
-            selectedAssets = pickedAssets
-        }
-        
+        let isEditing = viewController.presentingViewController is EditViewController
         viewController.presentingViewController?.dismiss(animated: false) { [weak self] in
             // If editViewController is not displayed, show it now
-            let isEditing = viewController.presentingViewController is EditViewController
             if !isEditing {
                 guard let strongSelf = self else {  return }
                 strongSelf.showEditViewController()
@@ -142,7 +126,7 @@ extension CucumberManager: GalleryPickerDelegate {
 // MARK: - EditViewControllerDelegate
 extension CucumberManager: EditViewControllerDelegate {
     func editViewControllerDidCancel(_ editViewController: EditViewController) {
-        removeAllImages()
+        imageCache.removeAllImages()
         
         viewController.dismiss(animated: true) { 
             editViewController.delegate = nil
@@ -155,7 +139,7 @@ extension CucumberManager: EditViewControllerDelegate {
         viewController.dismiss(animated: true) { [weak self] in
             editViewController.delegate = nil
             guard let strongSelf = self else { return }
-            strongSelf.removeAllImages()
+            strongSelf.imageCache.removeAllImages()
         }
     }
     

@@ -20,9 +20,6 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         cucumberManager = CucumberManager(self)
         cucumberManager.delegate = self
-        
-        
-        perform(#selector(handleTapCameraButton(_:)), with: nil)
     }
 
     override func didReceiveMemoryWarning() {
