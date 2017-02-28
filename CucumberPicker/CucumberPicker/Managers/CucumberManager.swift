@@ -23,15 +23,23 @@ open class CucumberManager: NSObject {
     weak var delegate: CucumberDelegate?
 
     fileprivate var cameraManager: CameraManager!
-    fileprivate var imageURLs = Array<URL>()
-    fileprivate var selectedAssets = Array<PHAsset>()
     fileprivate var viewController: UIViewController!
     fileprivate var senderButton: UIBarButtonItem!
+    
+    fileprivate let imageCache = ImageCache()
+    
+    /// Keep track of cached image URLs
+    fileprivate var imageURLs = [URL]()
+    
+    /// Keep track of selected assets to allow select/deselect them
+    fileprivate var selectedAssets = [PHAsset]()
+    
 
     public init(_ viewController: UIViewController) {
         self.viewController = viewController
+        cameraManager = CameraManager(viewController, imageCache: imageCache)
         
-        cameraManager = CameraManager(viewController)
+        super.init()
     }
     
     // MARK: Public methods
@@ -60,6 +68,7 @@ open class CucumberManager: NSObject {
         albumsViewController.galleryDelegate = self
         albumsViewController.selectedAssets = selectedAssets
         albumsViewController.takenPhotos = (imageURLs.count - selectedAssets.count)
+        albumsViewController.imageCache = imageCache
         
         let albumsNavigationController = UINavigationController(rootViewController: albumsViewController)
         viewController.present(albumsNavigationController, animated: flag, completion: nil)
@@ -67,6 +76,7 @@ open class CucumberManager: NSObject {
     
     fileprivate func showEditViewController() {
         guard imageURLs.count > 0 else {
+            print("Error trying to show EditViewController: imageURLs is empty")
             return
         }
         
@@ -75,6 +85,7 @@ open class CucumberManager: NSObject {
         let editViewController = storyboard.instantiateViewController(withIdentifier: viewControllerIdentifier) as! EditViewController
         editViewController.imageURLs = imageURLs
         editViewController.delegate = self
+        editViewController.imageCache = imageCache
         
         self.viewController.present(editViewController, animated: false, completion: nil)
     }
@@ -82,7 +93,7 @@ open class CucumberManager: NSObject {
     fileprivate func removeAllImages() {
         selectedAssets.removeAll()
         imageURLs.removeAll()
-        ImageCache().removeAllImages()
+        imageCache.removeAllImages()
     }
 }
 
@@ -102,11 +113,10 @@ extension CucumberManager: CameraManagerDelegate {
             editViewController.imageURLs = imageURLs
         }
         
-        manager.presentingViewController.dismiss(animated: !isEditing) { [weak self] in
+        manager.presentingViewController.dismiss(animated: false) { [weak self] in
             // If editViewController is not displayed, show it now
             if !isEditing {
                 guard let strongSelf = self else { return }
-                
                 strongSelf.showEditViewController()
             }
         }
@@ -114,9 +124,7 @@ extension CucumberManager: CameraManagerDelegate {
     
     func cameraManagerShouldOpenGallery(_ manager: CameraManager) {
         manager.delegate = nil
-        
-        let shouldAnimate = !(manager.presentingViewController is EditViewController)
-        showCustomGalleryPicker(from: manager.presentingViewController, animated: shouldAnimate)
+        showCustomGalleryPicker(from: manager.presentingViewController, animated: false)
     }
     
     func cameraManagerDidCancel(_ manager: CameraManager) {
@@ -124,14 +132,21 @@ extension CucumberManager: CameraManagerDelegate {
     }
 }
 
-// MARK: - Notifications from Custom Gallery
+// MARK: - GalleryPickerDelegate
 extension CucumberManager: GalleryPickerDelegate {
     func galleryPickerController<VC : UIViewController>(_ viewController: VC, didPickAssets assets: [PHAsset]?, withImageAtURLs urls: [URL]?) where VC : GalleryPickerProtocol {
         viewController.galleryDelegate = nil
         
         // Update assets & image urls
         if let pickedUrls = urls, let pickedAssets = assets {
-            imageURLs.append(contentsOf: pickedUrls)
+            // Avoid apending duplicate urls
+            for url in pickedUrls {
+                if !imageURLs.contains(url) {
+                    imageURLs.append(url)
+                }
+                // FIXME: Remove deselected assets!
+                
+            }
             selectedAssets = pickedAssets
         }
         
@@ -144,7 +159,7 @@ extension CucumberManager: GalleryPickerDelegate {
         }
         
         
-        viewController.presentingViewController?.dismiss(animated: !isEditing) { [weak self] in
+        viewController.presentingViewController?.dismiss(animated: false) { [weak self] in
             // If editViewController is not displayed, show it now
             if !isEditing {
                 guard let strongSelf = self else {  return }

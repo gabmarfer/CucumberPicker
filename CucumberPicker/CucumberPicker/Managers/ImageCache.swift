@@ -5,6 +5,7 @@
 //  Created by gabmarfer on 31/01/2017.
 //  Copyright © 2017 Kenoca Software. All rights reserved.
 //
+//  Cache images in a temporary folder. Load them using its URLs.
 
 import Foundation
 import UIKit
@@ -81,7 +82,7 @@ class ImageCache: NSObject {
             let fileURL = getURL(for: filename)
             try FileManager.default.removeItem(at: fileURL)
             cachedURLs.removeValue(forKey: filename)
-            print("Removed image in path: \(fileURL)")
+//            print("Removed image in path: \(fileURL)")
             return true
         } catch { return false }
     }
@@ -111,7 +112,7 @@ class ImageCache: NSObject {
             try data.write(to: fileURL)
             // Save the path
             cachedURLs[filename] = fileURL
-            print("Saved image in path: \(fileURL)")
+//            print("Saved image in path: \(fileURL)")
             return fileURL
         } catch {
             print("error saving file: \(error)")

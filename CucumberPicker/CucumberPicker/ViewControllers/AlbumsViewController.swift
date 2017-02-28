@@ -17,8 +17,9 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
         return CucumberManager.Custom.maxImages - selectedAssets.count - takenPhotos
     }
     
-    var selectedAssets = [PHAsset]()
     var takenPhotos: Int!
+    var imageCache: ImageCache!
+    var selectedAssets = [PHAsset]()
     
     fileprivate enum Section: Int {
         case allPhotos = 0
@@ -42,20 +43,15 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI()
+        title = NSLocalizedString("Albums", comment: "")
         
-        NotificationCenter.default.addObserver(forName: AssetHelper.AssetManagerNotification.didUpdateSmartAlbums.name,
-                                               object: nil, queue: OperationQueue.main) { [weak self] (notification) in
-                                                guard let strongSelf = self else { return }
-                                                strongSelf.tableView.reloadSections(IndexSet(integer: Section.smartAlbums.rawValue), with: .automatic)
-        }
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
+        navigationItem.rightBarButtonItem = doneButton
         
-        NotificationCenter.default.addObserver(forName: AssetHelper.AssetManagerNotification.didUpdateUserAlbums.name,
-                                               object: nil,
-                                               queue: OperationQueue.main) { [weak self] (notification) in
-                                                guard let strongSelf = self else { return }
-                                                strongSelf.tableView.reloadSections(IndexSet(integer: Section.userCollections.rawValue), with: .automatic)
-        }
+        registerForNotifications()
+        
+        configureGalleryToolbar()
+        updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
 
         performSegue(withIdentifier: SegueIdentifier.showAllPhotosNoAnimation.rawValue, sender: nil)
     }
@@ -71,17 +67,14 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: Setup UI
-    func setupUI() {
-        self.title = NSLocalizedString("Albums", comment: "")
-        
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
-        self.navigationItem.rightBarButtonItem = doneButton
+    deinit {
+        unregisterForNotifications()
     }
     
     // MARK: Actions
+    
     func done(_ sender: AnyObject) {
-        let urls = ImageCache().urlsForAssets(selectedAssets)
+        let urls = imageCache.urlsForAssets(selectedAssets)
         galleryDelegate?.galleryPickerController(self, didPickAssets: selectedAssets, withImageAtURLs: urls)
     }
     
@@ -175,6 +168,7 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
         assetGridViewController.galleryDelegate = galleryDelegate
         assetGridViewController.selectedAssets = selectedAssets
         assetGridViewController.takenPhotos = takenPhotos
+        assetGridViewController.imageCache = imageCache
 
         switch SegueIdentifier(rawValue: segue.identifier!)! {
             case .showAllPhotos, .showAllPhotosNoAnimation:
@@ -207,10 +201,40 @@ class AlbumsViewController: UITableViewController, GalleryPickerProtocol {
     }
 }
 
-// MARK: AssetGridViewControllerDelegate
+// MARK: - AlbumsViewController + Notifications
+extension AlbumsViewController {
+    func registerForNotifications() {
+        NotificationCenter.default.addObserver(forName: AssetHelper.AssetManagerNotification.didUpdateSmartAlbums.name,
+                                               object: nil, queue: OperationQueue.main) { [weak self] (notification) in
+                                                guard let strongSelf = self else { return }
+                                                strongSelf.tableView.reloadSections(IndexSet(integer: Section.smartAlbums.rawValue), with: .automatic)
+        }
+        
+        NotificationCenter.default.addObserver(forName: AssetHelper.AssetManagerNotification.didUpdateUserAlbums.name,
+                                               object: nil,
+                                               queue: OperationQueue.main) { [weak self] (notification) in
+                                                guard let strongSelf = self else { return }
+                                                strongSelf.tableView.reloadSections(IndexSet(integer: Section.userCollections.rawValue), with: .automatic)
+                                                
+        }
+    }
+    
+    func unregisterForNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: AssetHelper.AssetManagerNotification.didUpdateSmartAlbums.name,
+                                                  object: nil)
+        NotificationCenter.default.removeObserver(self,
+                                                  name: AssetHelper.AssetManagerNotification.didUpdateUserAlbums.name,
+                                                  object: nil)
+    }
+}
+
+// MARK: - AssetGridViewControllerDelegate
 extension AlbumsViewController: AssetGridViewControllerDelegate {
     func assetGridViewController(_ assetGridViewController: AssetGridViewController, didSelectAssets assets: [PHAsset]) {
         assetGridViewController.albumsDelegate =  nil
         selectedAssets = assets
+        
+        updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
     }
 }

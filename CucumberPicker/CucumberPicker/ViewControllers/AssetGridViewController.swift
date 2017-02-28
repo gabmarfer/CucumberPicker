@@ -30,11 +30,11 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
     weak var albumsDelegate: AssetGridViewControllerDelegate?
     weak var galleryDelegate: GalleryPickerDelegate?
     var fetchResult: PHFetchResult<PHAsset>!
-    var selectedAssets = Array<PHAsset>()
+    var selectedAssets: Array<PHAsset>!
     var takenPhotos: Int!
+    var imageCache: ImageCache!
 
     fileprivate let assetImageManager = PHCachingImageManager()
-    fileprivate let imageCache = ImageCache()
     fileprivate var thumbnailSize: CGSize!
     fileprivate var previousPreheatRect = CGRect.zero
     fileprivate var photosCompleted = 0
@@ -50,7 +50,9 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         // Create done button
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
         navigationItem.rightBarButtonItem = doneButton
-        
+
+        collectionView?.allowsMultipleSelection = true
+
         // If we get here without a segue, it's because we're visible at app launch,
         // so match the behaviour of segue from the default "All Photos" view
         if fetchResult == nil {
@@ -60,7 +62,6 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
             fetchResult = PHAsset.fetchAssets(with: allPhotosOption)
         }
         
-        collectionView?.allowsMultipleSelection = true
         
         // Select previously selected items.
         for asset in selectedAssets {
@@ -80,6 +81,9 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
             guard let strongSelf = self else { return }
             strongSelf.collectionView?.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
         }
+        
+        configureGalleryToolbar()
+        updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -155,6 +159,9 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         
         // Cache image
         imageCache.saveImageFromAsset(asset, resultHandler: nil)
+        
+        // Update the toolbar
+        updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -164,6 +171,9 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
             
             // Remove cached image
             imageCache.removeImageFromAsset(asset)
+            
+            // Update the toolbar
+            updateGalleryToolbarTitle(selected: CucumberManager.Custom.maxImages - numberOfSelectableAssets, of: CucumberManager.Custom.maxImages)
         }
     }
     

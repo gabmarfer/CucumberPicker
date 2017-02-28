@@ -22,11 +22,12 @@ class EditViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
     weak var delegate: EditViewControllerDelegate?
+    var imageCache: ImageCache!
     
     var imageURLs = Array<URL>()
     
     fileprivate var selectedIndexPath: IndexPath!
-
+    
     // MARK: ViewController lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,7 +91,7 @@ extension EditViewController: UICollectionViewDataSource, UICollectionViewDelega
         
         let fileURL = imageURLs[indexPath.item]
         if let image = UIImage(contentsOfFile: fileURL.path) {
-            cell.imageView.image = ImageCache().thumbnailImageFromImage(image, of: Int(cell.imageView.bounds.width))
+            cell.imageView.image = imageCache.thumbnailImageFromImage(image, of: Int(cell.imageView.bounds.width))
         }
         
         cell.isSelected = indexPath.compare(selectedIndexPath) == .orderedSame

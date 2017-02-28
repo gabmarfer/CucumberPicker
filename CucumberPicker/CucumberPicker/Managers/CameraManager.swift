@@ -30,13 +30,16 @@ class CameraManager: NSObject {
     }
     
     weak var delegate: CameraManagerDelegate?
+    weak private(set) var presentingViewController: UIViewController!
+    var imageCache: ImageCache!
     
-    private(set) var presentingViewController: UIViewController!
     fileprivate var imagePickerController: UIImagePickerController?
-    fileprivate var imageCache = ImageCache()
     
-    public init(_ presentingViewController: UIViewController) {
+    public init(_ presentingViewController: UIViewController, imageCache: ImageCache) {
         self.presentingViewController = presentingViewController
+        self.imageCache = imageCache
+        
+        super.init()
     }
     
     // MARK: Public methods
