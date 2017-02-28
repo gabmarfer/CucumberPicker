@@ -62,6 +62,7 @@
 		56C8E5A31E6570B40025CBBB /* PushNoAnimationSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PushNoAnimationSegue.swift; path = Commons/Utils/PushNoAnimationSegue.swift; sourceTree = "<group>"; };
 		56C8E5A81E6586620025CBBB /* GalleryPickerToolbarExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GalleryPickerToolbarExtension.swift; path = Commons/Extensions/GalleryPickerToolbarExtension.swift; sourceTree = "<group>"; };
 		56C8E5AA1E65DC930025CBBB /* Dictionary+KeysForValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Dictionary+KeysForValue.swift"; path = "Commons/Extensions/Dictionary+KeysForValue.swift"; sourceTree = "<group>"; };
+		56C8E5AC1E65E45E0025CBBB /* CucumberPicker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CucumberPicker.entitlements; sourceTree = "<group>"; };
 		56F894BB1E3B3E95007234A5 /* CucumberManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CucumberManager.swift; sourceTree = "<group>"; };
 		56F894BE1E3B3E95007234A5 /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OverlayView.xib; path = Views/OverlayView.xib; sourceTree = "<group>"; };
 		56F894C11E3B441E007234A5 /* CucumberPicker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = CucumberPicker.storyboard; path = Views/CucumberPicker.storyboard; sourceTree = "<group>"; };
@@ -121,6 +122,7 @@
 		569138591E378F6A00EA4CC2 /* CucumberPicker */ = {
 			isa = PBXGroup;
 			children = (
+				56C8E5AC1E65E45E0025CBBB /* CucumberPicker.entitlements */,
 				56F894B91E3B3E95007234A5 /* CucumberPicker */,
 				5691385A1E378F6A00EA4CC2 /* AppDelegate.swift */,
 				569138611E378F6A00EA4CC2 /* Assets.xcassets */,
@@ -301,6 +303,11 @@
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 83Z95EU8YK;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -486,11 +493,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CucumberPicker/CucumberPicker.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 83Z95EU8YK;
 				INFOPLIST_FILE = CucumberPicker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = kenocasoftware.CucumberPicker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kenocasoftware.cucumberpicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -499,10 +511,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CucumberPicker/CucumberPicker.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 83Z95EU8YK;
 				INFOPLIST_FILE = CucumberPicker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = kenocasoftware.CucumberPicker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kenocasoftware.cucumberpicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

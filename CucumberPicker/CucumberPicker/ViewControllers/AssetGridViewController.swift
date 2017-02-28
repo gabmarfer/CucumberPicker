@@ -69,10 +69,12 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         // Scroll down
         // FIXME: We have to repeat scrollToItem in order to assure that the last row is fully visible.
         let lastIndexPath = IndexPath(item: (fetchResult.count - 1), section: 0)
-        collectionView?.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
-        DispatchQueue.main.async { [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.collectionView?.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
+        if lastIndexPath.item >= 0 && lastIndexPath.item < collectionView!.numberOfItems(inSection: 0) {
+            collectionView?.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
+            DispatchQueue.main.async { [weak self] in
+                guard let strongSelf = self else { return }
+                strongSelf.collectionView?.scrollToItem(at: lastIndexPath, at: .bottom, animated: false)
+            }
         }
         
         configureGalleryToolbar()

@@ -164,9 +164,15 @@ class CameraManager: NSObject {
         }
         button.setImage(UIImage(named: iconName), for: .normal)
     }
+    
+    @IBAction func importFromCloud(_ sender: Any) {
+        let documentPickerController = UIDocumentPickerViewController(documentTypes: [String(kUTTypeJPEG)], in: .import)
+        documentPickerController.delegate = self
+        imagePickerController?.present(documentPickerController, animated: true, completion: nil)
+    }
 }
 
-// MARK: UIImagePickerControllerDelegate
+// MARK: - UIImagePickerControllerDelegate
 extension CameraManager: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -183,5 +189,21 @@ extension CameraManager: UIImagePickerControllerDelegate, UINavigationController
         picker.delegate = nil
         
         delegate?.cameraManagerDidCancel(self)
+    }
+}
+
+// MARK: - UIDocumentPickerDelegate
+extension CameraManager: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        controller.delegate = nil
+        
+        if let image = UIImage(contentsOfFile: url.path) {
+            let fileURL = imageCache.saveImage(image.fixedOrientation())
+            delegate?.cameraManager(self, didPickImageAtURL: fileURL!)
+        }
+    }
+    
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        controller.delegate = nil
     }
 }
