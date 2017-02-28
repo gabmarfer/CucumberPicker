@@ -27,6 +27,7 @@
 		56C22CFB1E5C9DB0006DF69B /* GalleryPickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C22CFA1E5C9DB0006DF69B /* GalleryPickerDelegate.swift */; };
 		56C8E5A41E6570B40025CBBB /* PushNoAnimationSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C8E5A31E6570B40025CBBB /* PushNoAnimationSegue.swift */; };
 		56C8E5A91E6586620025CBBB /* GalleryPickerToolbarExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C8E5A81E6586620025CBBB /* GalleryPickerToolbarExtension.swift */; };
+		56C8E5AB1E65DC930025CBBB /* Dictionary+KeysForValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C8E5AA1E65DC930025CBBB /* Dictionary+KeysForValue.swift */; };
 		56F894BF1E3B3E95007234A5 /* CucumberManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F894BB1E3B3E95007234A5 /* CucumberManager.swift */; };
 		56F894C01E3B3E95007234A5 /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56F894BE1E3B3E95007234A5 /* OverlayView.xib */; };
 		56F894C21E3B441E007234A5 /* CucumberPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56F894C11E3B441E007234A5 /* CucumberPicker.storyboard */; };
@@ -60,6 +61,7 @@
 		56C22CFA1E5C9DB0006DF69B /* GalleryPickerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GalleryPickerDelegate.swift; path = Commons/Protocols/GalleryPickerDelegate.swift; sourceTree = "<group>"; };
 		56C8E5A31E6570B40025CBBB /* PushNoAnimationSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PushNoAnimationSegue.swift; path = Commons/Utils/PushNoAnimationSegue.swift; sourceTree = "<group>"; };
 		56C8E5A81E6586620025CBBB /* GalleryPickerToolbarExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GalleryPickerToolbarExtension.swift; path = Commons/Extensions/GalleryPickerToolbarExtension.swift; sourceTree = "<group>"; };
+		56C8E5AA1E65DC930025CBBB /* Dictionary+KeysForValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Dictionary+KeysForValue.swift"; path = "Commons/Extensions/Dictionary+KeysForValue.swift"; sourceTree = "<group>"; };
 		56F894BB1E3B3E95007234A5 /* CucumberManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CucumberManager.swift; sourceTree = "<group>"; };
 		56F894BE1E3B3E95007234A5 /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OverlayView.xib; path = Views/OverlayView.xib; sourceTree = "<group>"; };
 		56F894C11E3B441E007234A5 /* CucumberPicker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = CucumberPicker.storyboard; path = Views/CucumberPicker.storyboard; sourceTree = "<group>"; };
@@ -256,10 +258,11 @@
 		56F894CC1E3B6816007234A5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				56C8E5AA1E65DC930025CBBB /* Dictionary+KeysForValue.swift */,
+				56C8E5A81E6586620025CBBB /* GalleryPickerToolbarExtension.swift */,
 				562F8BF51E5B4F9200FCA41C /* UIImageFixedOrientationExtension.swift */,
 				566C83411E5DACC100987701 /* UIImageSwiftExtension */,
 				56F894CD1E3B686F007234A5 /* UIStoryboard+Cucumber.swift */,
-				56C8E5A81E6586620025CBBB /* GalleryPickerToolbarExtension.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				569C65001E40DC46009ECE8F /* ImageCache.swift in Sources */,
 				56C8E5A41E6570B40025CBBB /* PushNoAnimationSegue.swift in Sources */,
 				56C8E5A91E6586620025CBBB /* GalleryPickerToolbarExtension.swift in Sources */,
+				56C8E5AB1E65DC930025CBBB /* Dictionary+KeysForValue.swift in Sources */,
 				56F894C41E3B44F3007234A5 /* GridViewCell.swift in Sources */,
 				562123C31E42383D004EABD4 /* EditAssetViewCell.swift in Sources */,
 				56C22CFB1E5C9DB0006DF69B /* GalleryPickerDelegate.swift in Sources */,

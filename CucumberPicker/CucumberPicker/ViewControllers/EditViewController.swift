@@ -18,6 +18,7 @@ protocol EditViewControllerDelegate: class {
 class EditViewController: UIViewController {
     
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -40,7 +41,11 @@ class EditViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Hide delete button if we only have one image
+        deleteButton.isHidden = !(imageCache.imageURLs.count > 1)
+        
         collectionView.reloadData()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,6 +62,18 @@ class EditViewController: UIViewController {
 
     @IBAction func doneEditing(_ sender: Any) {
         delegate?.editViewControllerDidFinishEditing(self)
+    }
+    
+    @IBAction func deleteImage(_ sender: Any) {
+        let fileURL = imageCache.imageURLs[selectedIndexPath.item]
+        imageCache.removeImage(named: fileURL.lastPathComponent)
+        collectionView.deleteItems(at: [selectedIndexPath])
+        
+        // Select the new first item
+        selectItemAtIndexPath(IndexPath(item: 0, section: 0))
+        
+        // Hide delete button if we only have one image
+        deleteButton.isHidden = !(imageCache.imageURLs.count > 1)
     }
     
     func addImage(_ sender: Any) {

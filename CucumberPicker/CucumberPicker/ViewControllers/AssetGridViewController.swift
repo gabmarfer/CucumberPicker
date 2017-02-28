@@ -136,6 +136,11 @@ class AssetGridViewController: UICollectionViewController, GalleryPickerProtocol
         return numberOfSelectableAssets > 0
     }
     
+    override func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        // Avoid deselect if we only have 1 item
+        return imageCache.imageURLs.count > 1
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = fetchResult.object(at: indexPath.item)
         

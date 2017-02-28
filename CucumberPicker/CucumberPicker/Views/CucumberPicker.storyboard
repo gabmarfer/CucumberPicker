@@ -138,11 +138,24 @@
                                             <action selector="doneEditing:" destination="fHM-0h-UgT" eventType="touchUpInside" id="22H-DQ-Y7D"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PVk-5p-Ljg">
+                                        <rect key="frame" x="165.5" y="10" width="44" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="PVk-5p-Ljg" secondAttribute="height" multiplier="1:1" id="3sc-rv-9A1"/>
+                                            <constraint firstAttribute="width" constant="44" id="whs-yn-dJG"/>
+                                        </constraints>
+                                        <state key="normal" image="overlay-delete"/>
+                                        <connections>
+                                            <action selector="deleteImage:" destination="fHM-0h-UgT" eventType="touchUpInside" id="f6y-XE-aiv"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="spL-9g-d3U" firstAttribute="centerY" secondItem="LuE-2k-IoW" secondAttribute="centerY" id="2qm-t9-yMM"/>
+                                    <constraint firstItem="PVk-5p-Ljg" firstAttribute="centerX" secondItem="67n-bw-njq" secondAttribute="centerX" id="C5A-2E-azG"/>
                                     <constraint firstAttribute="trailing" secondItem="spL-9g-d3U" secondAttribute="trailing" constant="15" id="KX2-yS-wfS"/>
+                                    <constraint firstItem="PVk-5p-Ljg" firstAttribute="centerY" secondItem="spL-9g-d3U" secondAttribute="centerY" id="Sfc-zd-G1w"/>
                                     <constraint firstItem="LuE-2k-IoW" firstAttribute="centerY" secondItem="67n-bw-njq" secondAttribute="centerY" id="duC-LZ-Aij"/>
                                     <constraint firstItem="LuE-2k-IoW" firstAttribute="leading" secondItem="67n-bw-njq" secondAttribute="leading" constant="5" id="rls-oj-o6r"/>
                                     <constraint firstAttribute="height" constant="64" id="zH0-8c-3Xg"/>
@@ -240,6 +253,7 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="zoD-FZ-Uvk" id="eu4-Rg-r8a"/>
+                        <outlet property="deleteButton" destination="PVk-5p-Ljg" id="nST-je-a4y"/>
                         <outlet property="doneButton" destination="spL-9g-d3U" id="dts-hP-gaP"/>
                         <outlet property="imageView" destination="IUe-my-w03" id="mgs-8G-Eo4"/>
                     </connections>
@@ -320,6 +334,7 @@
         <image name="checkmark-blue" width="22" height="22"/>
         <image name="edit-add-image" width="74" height="74"/>
         <image name="overlay-close-white" width="22" height="22"/>
+        <image name="overlay-delete" width="23" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="uo5-ib-bUl"/>

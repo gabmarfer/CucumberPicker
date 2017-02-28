@@ -95,7 +95,6 @@ class ImageCache: NSObject {
     
     @discardableResult func removeImageFromAsset(_ asset: PHAsset) -> Bool {
         let key = keyForAsset(asset)
-        selectedAssets.remove(asset)
         return removeImage(named: key)
     }
     
@@ -112,7 +111,10 @@ class ImageCache: NSObject {
             if let urlIdx = imageURLs.index(of: fileURL) {
                 imageURLs.remove(at: urlIdx)
             }
-//            print("Removed image in path: \(fileURL)")
+            // Remove selectedAsset if we are deleting an item from EditController
+            if let asset = asset(for: filename) {
+                selectedAssets.remove(asset)
+            }
             return true
         } catch { return false }
     }
@@ -144,7 +146,6 @@ class ImageCache: NSObject {
             // Save the path
             cachedURLs[filename] = fileURL
             imageURLs.append(fileURL)
-//            print("Saved image in path: \(fileURL)")
             return fileURL
         } catch {
             print("error saving file: \(error)")
@@ -167,6 +168,14 @@ class ImageCache: NSObject {
         assetIdentifierKeys[asset.localIdentifier] = newImageKey
         
         return newImageKey
+    }
+    
+    fileprivate func asset(for imageKey: String) -> PHAsset? {
+        guard let assetIdentifier = assetIdentifierKeys.keysForValue(value: imageKey).last else {
+            return nil
+        }
+        let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: nil)
+        return fetchResult.lastObject
     }
     
     fileprivate func getURL(for filename: String) -> URL {
